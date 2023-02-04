@@ -1,0 +1,117 @@
+'-----------------------------------------------------------------------
+'                       Color Settings for Bitmap
+'-----------------------------------------------------------------------
+
+_____________________________ Color settings ___________________________
+
+Start from = black
+Fade to black = 1
+
+________________________________ Palette _______________________________
+
+Cycle length = 2048
+Number of colors = 6
+[0, 0, 7, 100]
+[0.16, 32, 107, 203]
+[0.42, 237, 255, 255]
+[0.6425, 255, 170, 0]
+[0.8575, 0, 2, 0]
+[1, 0, 7, 100]
+
+- End of settings -
+
+'-----------------------------------------------------------------------
+'                             How to use it
+'-----------------------------------------------------------------------
+
+It is important to leave everything where it is before the 'How to use'
+section. Do not add or remove lines! (except for the palette content
+of course)
+
+_____________________________ Color settings ___________________________
+
+Start from:
+Color gradient for first iterations. Can be 'black' or 'white'.
+
+Fade to black: 1 = yes, 0 = no
+
+________________________________ Palette _______________________________
+
+Cycle length:
+Length (in iterations) of the color cycle. (to remove later)
+
+Number of colors: Must be < or = to number of colors listed below.
+Limit of 15 colors allowed. (at least for now)
+
+Colors: [position on palette (from 0 to 1), R value, G value, B value]
+It is highly recommended to leave the first color at position 0 as it will
+be duplicated at position 1. (for smooth transitions between cycles)
+
+You can use this online tool to visualize the palette before entering the
+values in this file. (just remember to duplicate the first color to the
+end of the palette)
+Tool: https://cssgradient.io/
+
+'-----------------------------------------------------------------------
+'                   Palette storage - Copy/paste on top
+'-----------------------------------------------------------------------
+
+You can store palettes in this section.
+
+________________________________ Default _______________________________
+Dark blue, light blue, white, yellow, black
+
+Cycle length = 2048
+Number of colors = 5
+[0, 0, 7, 100]
+[0.16, 32, 107, 203]
+[0.42, 237, 255, 255]
+[0.6425, 255, 170, 0]
+[0.8575, 0, 2, 0]
+
+_______________________________ Custom 1 _______________________________
+Blue, black, green, black, blue
+
+Cycle length = 150
+Number of colors = 5
+[0, 0, 75, 255]
+[0.15, 0, 0, 0]
+[0.5, 0, 255, 75]
+[0.85, 0, 0, 0]
+[1, 0, 75, 255]
+
+_______________________________ Custom 2 _______________________________
+Black, cyan, black, blue, black, green, black
+
+Cycle length = 150
+Number of colors = 7
+[0, 0, 0, 0]
+[0.15, 0, 255, 255]
+[0.33, 0, 0, 0]
+[0.5, 0, 75, 255]
+[0.66, 0, 0, 0]
+[0.85, 0, 255, 75]
+[1, 0, 0, 0]
+
+_______________________________ Custom 3 _______________________________
+Black, cyan, black, blue, green, black
+
+Cycle length = 150
+Number of colors = 5
+[0, 0, 0, 0]noir
+[0.15, 0, 255, 255]cyan
+[0.5, 0, 0, 255]
+[0.85, 0, 255, 0]vert
+[1, 0, 0, 0]noir
+_______________________________ Custom 4 _______________________________
+Black, blue, cyan, green, black
+
+Cycle length = 150
+Number of colors = 5
+[0, 2, 0, 36]
+[0.25, 0, 44, 148]
+[0.65, 141, 255, 255]
+[0.82, 0, 255, 16]
+[1, 2, 0, 36]
+______________________________ Custom ... ______________________________
+
