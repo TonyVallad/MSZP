@@ -1,8 +1,6 @@
 
 # Readme - Mandelbrot Set Zoomer Program - Version 0.5 - Alpha
 
-
-
 ## Installation
 
 1. Extract the content of the .zip file to a new folder.
@@ -153,10 +151,8 @@ It will contain the following parameters :
 
 EXE compiled using QB64 x64 Version 2.1
 
-Disclaimer: Since this program is written in QBasic it can only use 1 
-CPU Thread to make calculations. So don't expect it to be efficient !
-I'm only working on it because this was my first software and it has
-sentimental value to me.
+Disclaimer: Since this program is written in QBasic it can only use 1 CPU Thread to make calculations. (as far as I know...) 
+I'm only working on it because this was my first software and it has sentimental value to me.
 I want to see it finished.
 
 If my AMD Ryzen 9 5900X was sentient, it probably would be frustrated as f*** ! xD
