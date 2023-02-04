@@ -30,7 +30,7 @@ DECLARE SUB Load_variables ()
 DECLARE SUB Update_C ()
 
 'Text inside software title bar
-_Title "Mandelbrot Set Zoomer Program - 2023 - V 0.5 - Alpha"
+_Title "Mandelbrot Set Zoomer Program - 2023 - V0.5 - Alpha"
 
 'Program icon - Must be in QB64 install folder (for some reason...)
 $ExeIcon:'set.ico'
@@ -325,7 +325,7 @@ Do
 
         'Color settings selection
         Show_status 2, 2, "Select color profile", 15, "Press F1 - F2", 14
-        color_settings = 1 'Forced for testing - to be replaced by inkey$
+        color_settings = 2 'Forced for testing - to be replaced by inkey$
         If color_settings = 1 Then
             Show_status 2, 2, "Number of cycles:", 15, "By default: 1", 7
             Locate 5, 2: Color 2: Input user_input$
@@ -335,6 +335,13 @@ Do
                 cycle_length = int(precision / cycles_nb#)
             Else
                 cycle_length = int(precision / cycles_nb#)
+            End If
+        Elseif color_settings = 2 Then
+            Show_status 2, 2, "Cycle length:", 15, "By default: " + RS$(precision), 7
+            Locate 5, 2: Color 2: Input user_input$
+            cycle_length = VAL(user_input$)
+            If cycle_length <= 2 or cycle_length > 1000000 Then
+               cycle_length = precision
             End If
         End If
 
@@ -627,7 +634,6 @@ Return
 '-----------------------------------------------------------------------
 
 Label_BMP_Creator_Page: '___________________________________ BMP Creator
-
     Cls
     Presentation
     Locate 14, 20: Color 15: Print "Image Name: "
@@ -695,7 +701,6 @@ Label_BMP_Creator_Page: '___________________________________ BMP Creator
     precision_default = 250
     xC# = -0.512511498387847167
     yC# = 0.521295573094847167
-
 Return
 
 '-----------------------------------------------------------------------
@@ -703,7 +708,6 @@ Return
 '-----------------------------------------------------------------------
 
 Label_Mandelbrot_BMP: '__________________________________ Mandelbrot BMP
-
     Cls
     Presentation
     Locate 14, 20: Color 15: Print "Image Name: "
@@ -753,7 +757,6 @@ Label_Mandelbrot_BMP: '__________________________________ Mandelbrot BMP
 
     'Reset variables
     precision_default = 250
-
 Return
 
 '-----------------------------------------------------------------------
@@ -761,7 +764,6 @@ Return
 '-----------------------------------------------------------------------
 
 Label_Video_Mode_1: '______________________________________ Video Mode 1
-
     Cls
     Presentation
     If error1 = 1 Then
@@ -889,7 +891,6 @@ Label_Video_Mode_1: '______________________________________ Video Mode 1
 
     'Reset variables
     precision_default = 250
-
 Return
 
 
@@ -898,7 +899,6 @@ Return
 '-----------------------------------------------------------------------
 
 Label_Video_Mode_2: '______________________________________ Video Mode 2
-
     Cls
     Presentation
     If error1 = 1 Then
@@ -1038,7 +1038,6 @@ Return
 '-----------------------------------------------------------------------
 
 Label_Julia_BMP: '____________________________________________ Julia BMP
-
     Cls
     Presentation
     Locate 14, 20: Color 15: Print "Image Name: "

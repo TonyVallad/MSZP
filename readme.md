@@ -20,6 +20,7 @@ The program will create its own folders when needed. (Data, Photos...)
 - Added a visual indicator of visor step size for targetting mode. (small white square in the center of the visor)
 - Made it possible to increment C coordinates from explorer. (use arrow keys when not in targetting mode) (Julia only of course) [step fixed at 0.02 for now]
 - Created a new color palette system along with a 'color-settings.txt' file to be able to edit palette and other settings. (loaded at the beginning of every BMP creation)
+- Updated version numbers to be more *traditional*
 
 ### From V 0.1 to V 0.4:
 - Added program icon and text in title bar.

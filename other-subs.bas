@@ -107,9 +107,7 @@ Sub Show_status (y_pos, x_pos, line_1$, color_1, line_2$, color_2)
 
     'Content
     Locate y_pos + 2, x_pos: Color color_1: Print line_1$
-    'Locate y_pos + 2, x_pos + 10: Color 2: Print RS$(x_coord#)
     Locate y_pos + 3, x_pos: Color color_2: Print line_2$
-    'Locate y_pos + 3, x_pos + 10: Color 2: Print RS$(y_coord#)
 End Sub
 
 Sub Progress_bar (progress_bar_x_pos, progress_bar_y_pos, progress_bar_length, progress_bar_height, value_target, value_current)
@@ -366,13 +364,6 @@ Sub Grid_display
     For ya = 20 To 420 Step 20
         Line (220, ya)-(620, ya), grid_color
     Next ya
-
-    'External yellow viewer frame
-    'Line (220, 20)-(620, 420), 14, B
-
-    'White crosshair
-    'Line (180, 220)-(660, 220), 15
-    'Line (420, 0)-(420, 459), 15
 End Sub
 
 Sub Crosshair_display (crosshair_size, crosshair_color)
@@ -439,10 +430,6 @@ End Sub
 'Save image parameters to a file
 Sub Save_variables (file_name$, x_coord#, y_coord#, view_size#, nbzoom, precision)
     Shared mode$, xC#, yC#
-
-    'Display status
-    'Show_status 2, 2, "Save parameters file as:", 15, "", 0
-    'Locate 5, 2: Color 2: Input file_name$
 
     'Creates Data folder when necesarry
     Shell "md Data"

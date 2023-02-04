@@ -107,7 +107,7 @@ END SUB
 Sub Get_pixel_color_BMP ()
     Shared color_settings, start_with$, fade_to_black, cycle_length, nb_colors_used, precision, r, g, b, r$, g$, b$, color_error_counter, C, palette_pos#(), palette_color()
 
-    'Frequencies (or resonances)
+    'Frequencies (or resonances) - Used for old color profile. To delete
     'r_freq = 745
     'g_freq = 882
     'b_freq = 957
@@ -123,7 +123,7 @@ Sub Get_pixel_color_BMP ()
     '_________________________________________ Color Setings
 
     'Color settings
-    If color_settings = 1 Then 'Color palette
+    If color_settings = 1 Then 'Color palette - Number of cycles
         'cycle_length = nb_colors_used * 100 'Forced 100 * nb_colors for testing
         'cycle_length = precision 'Forced for testing
         color_length = int(cycle_length / nb_colors_used)
@@ -175,7 +175,57 @@ Sub Get_pixel_color_BMP ()
             g = 0
             b = 0
         End If
-    Elseif color_settings = 2 Then 'Green/blue on black background
+    Elseif color_settings = 2 Then 'Color palette - Cycle length
+        color_length = int(cycle_length / nb_colors_used)
+        position_in_cycle# = (C MOD cycle_length) / cycle_length
+
+        If precision >= 3 * color_length Then 'Modify to adapt better to precision
+            low_threshold = color_length
+        Else
+            low_threshold = 75
+        End If
+
+        GetRGBValues nb_colors_used, position_in_cycle#
+
+        'Start from white/black
+        'start_with$ = "white" 'Forced white for testing
+        If start_with$ = "white" Then 'Start from white
+            If C < low_threshold Then
+                r = int(r + (low_threshold - C) * (255 - r) / low_threshold)
+                g = int(g + (low_threshold - C) * (255 - g) / low_threshold)
+                b = int(b + (low_threshold - C) * (255 - b) / low_threshold)
+            End If
+        ElseIf start_with$ = "black" Then 'Start from black
+            If C < low_threshold Then
+                r = int(r * c / low_threshold)
+                g = int(g * c / low_threshold)
+                b = int(b * c / low_threshold)
+            End If
+        End If
+
+        'Fade to black
+        'fade_to_black = 1 'Forced "on" for testing
+        If fade_to_black = 1 Then
+            If precision >= cycle_length Then
+                If C > (precision - (0.5 * color_length)) Then 'To fix
+                    r = int(r * (precision - C) / (0.5 * color_length))
+                    g = int(g * (precision - C) / (0.5 * color_length))
+                    b = int(b * (precision - C) / (0.5 * color_length))
+                End If
+            ElseIf C > 0.85 * precision Then
+                r = int(r * (precision - C) / (precision * 0.15))
+                g = int(g * (precision - C) / (precision * 0.15))
+                b = int(b * (precision - C) / (precision * 0.15))
+            End If
+        End If
+
+        'Black if C = max iterations
+        If C = precision Then
+            r = 0
+            g = 0
+            b = 0
+        End If
+    Elseif color_settings = 3 Then 'Green/blue on black background
         r = 0
         If C < precision / 2 Then
             g = 255 - Int((C / precision) * 2 * 255)
@@ -183,16 +233,6 @@ Sub Get_pixel_color_BMP ()
             g = Int((1 - (C / precision)) * 2 * 255)
         End If
         b = 255 - Int((C / precision) * 255)
-        
-    Elseif color_settings = 3 Then 'Green/purple on white background
-        B = Int((C / precision) * 255)
-        If C < precision / 2 Then
-            g = Int((C / precision) * 2 * 255)
-        Else
-            g = 255 - Int((1 - (C / precision)) * 2 * 255)
-            'g = INT((1 - (c / precision)) * 2 * 255)
-        End If
-        r = Int((C / precision) * 255)
     Elseif color_settings = 4 Then 'To identify/fix
         IF c < precision / 5 THEN g = 255 - ((INT((c / precision) * 255 / 5)) + INT(precision / 5))
         IF c < 1 * precision / 5 THEN g = ((INT((c / precision) * 255 / 5)) + INT(1 * precision / 5))
@@ -450,10 +490,6 @@ Sub BMP_Creator
 
         Locate 12, 11: Color 15: Print "File name:"
         Locate 12, 22: Color 14: Print full_file_name$
-        'Locate 13, 11: Color 15: Print "Resolution:"
-        'Locate 13, 45: Color 14: Print RS$(longueur); "x"; RS$(hauteur)
-        'Locate 14, 11: Color 15: Print "Color settings:"
-        'Locate 14, 45: Color 14: Print RS$(color_settings)
         Locate 13, 11: Color 15: Print "Resolution:"
         Locate 13, 23: Color 14: Print RS$(longueur); "x"; RS$(hauteur)
         Locate 14, 11: Color 15: Print "Color settings:"
@@ -464,8 +500,6 @@ Sub BMP_Creator
             Locate 15, 45: Color 14: Print RS$(w#)
         End If
         Locate 18, 11: Color 14: Print "Creating image:"
-
-        'Locate 22, 11: Color 15: Print "Startup time:  " + time_start$
     Else
         'Display status
         Show_status 2, 2, "Creating BMP image...", 14, "", 0
