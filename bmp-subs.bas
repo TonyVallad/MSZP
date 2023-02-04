@@ -471,7 +471,7 @@ Sub BMP_Creator
         Show_status 2, 2, "Creating BMP image...", 14, "", 0
     End If
 
-    '_______________________________________________________ Image Content
+    'Image Content
     If mode$ = "Mandelbrot" Then
         yC# = debuty# 'C points a traiter
         Do
@@ -496,14 +496,11 @@ Sub BMP_Creator
                 'New sub to get RGB values from C
                 Get_pixel_color_BMP
 
-                '_________________________________________ Saving pixel to file
-
+                'Saving pixel to file
                 compteur = compteur + 1
                 Put #2, 54 + compteur, b$
-        
                 compteur = compteur + 1
                 Put #2, 54 + compteur, g$
-        
                 compteur = compteur + 1
                 Put #2, 54 + compteur, r$
             
@@ -511,6 +508,7 @@ Sub BMP_Creator
                 xC# = xC# + pas#
             Loop Until x = longueur
             
+            'Progress bar
             If BMP_creator_stealth = 0 Then
                 'Display nb images progression
                 Locate 18, 27: Color 2: Print RS$(f); "/"; RS$(ni)
@@ -566,6 +564,7 @@ Sub BMP_Creator
                 x = x + 1
             Loop Until x = longueur
             
+            'Progress bar
             If BMP_creator_stealth = 0 Then
                 'Display nb images progression
                 Locate 18, 27: Color 2: Print RS$(f); "/"; RS$(ni)
@@ -584,6 +583,7 @@ Sub BMP_Creator
         Loop Until y = hauteur
     End If
 
+    'End information display
     If BMP_creator_stealth = 0 Then
         Locate 20, 11: Color 15: Print "Number of images:"; ni
         Locate 21, 11: Color 15: Print "Elapsed time: "; Elapsed_time$(time_start, date_start$, TIMER, DATE$)
@@ -613,7 +613,7 @@ Sub BMP_Creator
 
 End Sub
 
-Sub BMPjulia
+Sub BMPjulia 'Obsolete
     Shared var, var$, video_name$, longueur, hauteur, xC#, yC#, precision, debutx#, debuty#, pas#
 
     Open video_name$ For Binary As #2
@@ -749,7 +749,7 @@ Sub BMPjulia
 
 End Sub
 
-Sub BMPmandelbrot
+Sub BMPmandelbrot 'Obsolete
     Shared name$, longueur, hauteur, precision, ni, f, imagename$, time_start$, color_settings, precision_min, precision_max, x_coord#, y_coord#, view_size#, w#
 
     pas# = view_size# / hauteur
@@ -1181,7 +1181,7 @@ Sub Resolution_select
     Locate 21, 28: Color 15: Print "- 712 x 400"
     longueur = 0
 
-    'UHD Resolutions memo
+    'UHD for testing
     '8K
     'longueur = 7680
     'hauteur = 4320

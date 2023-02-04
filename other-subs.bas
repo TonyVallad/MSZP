@@ -7,7 +7,7 @@ Sub Presentation
     Locate 30, 2: Color 15: Print "Created by:";
     Locate 30, 14: Color 2: Print "Anthony Vallad";
     Locate 30, 61: Color 15: Print "V.";
-    Locate 30, 64: Color 1: Print "2023 - Alpha 1.5";
+    Locate 30, 61: Color 1: Print "2023 - V0.5 - Alpha";
 End Sub
 
 'Clears area to black
@@ -514,61 +514,4 @@ Sub Save_log (full_folder_path$)
         Print #1, "color_settings: "; color_settings
         Print #1, "Number of images: "; ni
     Close #1
-End Sub
-
-Sub juliacreator
-    Shared explorer_x_pos, explorer_y_pos, precision, debutx#, debuty#, pas#, xC#, yC#
-
-    explorer_x_pos = 220 ' 0 < x < 279
-    explorer_y_pos = 20 ' 0 < y < 79
-
-    x = explorer_x_pos
-    y = explorer_y_pos
-
-    Line (explorer_x_pos - 1, explorer_y_pos - 1)-(explorer_x_pos + 401, explorer_y_pos + 401), 17, B
-
-    xcal# = debutx# 'C points a traiter
-    Do
-        ycal# = debuty#
-        Do
-            C = 0 'Compteur de boucles (max = precision)
-            flag = 0 'Sortie du cercle de rayon 2
-            x1# = xcal# 'Coordonnees de z0
-            y1# = ycal#
-            Do
-                x2# = x1# * x1# - y1# * y1# + xC# 'Coordonnees de z2+C
-                y2# = 2 * x1# * y1# + yC#
-                If x2# * x2# + y2# * y2# > 4 Then flag = 1
-                x1# = x2#
-                y1# = y2#
-                C = C + 1
-            Loop Until C = precision Or flag = 1
-
-            f = 0
-            Do
-                f = f + 1
-                If C < (100 - f * 10 + 9) * precision / 100 Then couleur = 10
-                If C < (100 - f * 10 + 8) * precision / 100 Then couleur = 9
-                If C < (100 - f * 10 + 7) * precision / 100 Then couleur = 13
-                If C < (100 - f * 10 + 6) * precision / 100 Then couleur = 12
-                If C < (100 - f * 10 + 5) * precision / 100 Then couleur = 11
-                If C < (100 - f * 10 + 4) * precision / 100 Then couleur = 14
-                If C < (100 - f * 10 + 3) * precision / 100 Then couleur = 4
-                If C < (100 - f * 10 + 2) * precision / 100 Then couleur = 3
-                If C < (100 - f * 10 + 1) * precision / 100 Then couleur = 2
-                If C < (100 - f * 10 + 0) * precision / 100 Then couleur = 1
-            Loop Until f = 10
-            If C < 16 Then couleur = C
-            If C = 1 Then couleur = 0
-            If C = precision Then couleur = 0
-    
-            PSet (x, y), couleur
-            y = y + 1
-            yC# = yC# + pas#
-        Loop Until y = explorer_y_pos + 401
-        x = x + 1
-        y = explorer_y_pos
-        xC# = xC# + pas#
-    Loop Until x = explorer_x_pos + 401
-
 End Sub

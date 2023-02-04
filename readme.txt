@@ -1,5 +1,5 @@
 '-----------------------------------------------------------------------
-'          Readme - Mandelbrot Set Zoomer Program - Alpha 1.5
+'          Readme - Mandelbrot Set Zoomer Program - Alpha 0.5
 '-----------------------------------------------------------------------
 
 
@@ -13,7 +13,7 @@ The program will create its own folders when needed. (Data, Photos...)
 
 '----------------------------- Changelog -------------------------------
 
-Alpha 1.5
+Alpha 0.5
 - Added Julia sets exploration and updated explorer functions to be
   compatible.
 - Updated BMP Creation to work with new file paths and both modes. (video
@@ -29,7 +29,7 @@ Alpha 1.5
   be able to edit palette and other settings. (loaded at the beginning of
   every BMP creation)
 
-From Alpha 1.1 to Alpha 1.4:
+From Alpha 0.1 to Alpha 0.4:
 - Added program icon and text in title bar.
 - Modified the code to display the y axis correctly. (used to be inverted
   because y coordinates are inverted in SCREEN 12 in QBasic...)

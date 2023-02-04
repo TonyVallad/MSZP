@@ -59,7 +59,6 @@ ni = 1
 f = 1
 precision_default = 250
 C_step# = 0.02 'Default C step
-mode$ = "Mandelbrot" 'Unnecesary I think...
 Display_crosshair = 1 'To toggle crosshair display
 
 Cls
@@ -700,7 +699,7 @@ Label_BMP_Creator_Page: '___________________________________ BMP Creator
 Return
 
 '-----------------------------------------------------------------------
-'                       Old Mandelbrot BMP Page
+'                          Mandelbrot BMP Page - Obsolete
 '-----------------------------------------------------------------------
 
 Label_Mandelbrot_BMP: '__________________________________ Mandelbrot BMP
@@ -1035,7 +1034,7 @@ Label_Video_Mode_2: '______________________________________ Video Mode 2
 Return
 
 '-----------------------------------------------------------------------
-'                           Julia Sets - BMP
+'                             Julia Sets - BMP - Obsolete
 '-----------------------------------------------------------------------
 
 Label_Julia_BMP: '____________________________________________ Julia BMP
@@ -1140,7 +1139,7 @@ videobmpjuliasp1:
 Return
 
 '-----------------------------------------------------------------------
-'                            Controls Page
+'                            Controls Page - Todo
 '-----------------------------------------------------------------------
 
 Label_controls_page: '____________________________________ Controls page
@@ -1171,7 +1170,7 @@ Label_controls_page: '____________________________________ Controls page
 RETURN
 
 '-----------------------------------------------------------------------
-'                         Include other files
+'                            Included files
 '-----------------------------------------------------------------------
 
 'QB64 needs the following lines to be commented (do not uncomment!)
