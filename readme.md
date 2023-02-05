@@ -20,7 +20,11 @@ The program will create its own folders when needed. (Data, Photos...)
 - Added a visual indicator of visor step size for targetting mode. (small white square in the center of the visor)
 - Made it possible to increment C coordinates from explorer. (use arrow keys when not in targetting mode) (Julia only of course) [step fixed at 0.02 for now]
 - Created a new color palette system along with a 'color-settings.txt' file to be able to edit palette and other settings. (loaded at the beginning of every BMP creation)
+- Color profiles 1 & 2 are now using color palette.
+  * 1 changes based on number of cycles to max iterations.
+  * 2 changes based on length of cycle.
 - Updated version numbers to be more *traditional*
+- Updated BMP creation to support 4k/8k/16k/32k bitmaps!
 
 ### From V 0.1 to V 0.4:
 - Added program icon and text in title bar.
@@ -113,33 +117,27 @@ It will contain the following parameters :
 ## Todo list
 
 ### ASAP
-- Add a custom resolution option.
-  + Find how many pixels are allowed with QB64 (memory limit) and divide image
-    generation into slices if above that limit. (4k/8k/...)
 - Fix default parameters display when creating a BMP from explorer.
-- Create color settings 2.
+- Add info on screen when creating BMP from explorer.
+- Add info on options when creating a BMP from explorer.
 - Complete controls page.
 - Add a preview button based on color profile.
-- When loading palette, duplicate first color to position 1.
 - Fix video creation.
 - Add 'Elapsed time' to video creation.
 - Add a video mode menu.
 - Make it possible to continue video creation by openning log file.
-- Make a color palette based on default but offset a bit.
-- Add info on screen when creating BMP from explorer.
-- Add option to change C coordinates step. (now fixed to 0.02)
+- Make a color palette based on default but offset a little bit.
+- Add option to change C coordinates step on Julia explorer. (now fixed to 0.02)
 - Create different display profiles for 'BMP Creation' function. (right now 
   using 'stealth modes')
 - Make it possible to change zoom amount on targetting screen. (visor size)
-- Change variable names to make them clearer and avoid using the same names.
-- Use _FLOAT variables to be able to zoom in further. (possible?)
+- Change variable names to make them clearer and avoid using the same names. (and use DIM)
+- Use _FLOAT variables to be able to zoom in further. (possibly?)
 
 ### Later
 - Smooth out the contours between colors for bitmap.
   See: https://www.karlsims.com/julia.html (bottom of the page)
-- Support for 4k and 8k images? (might not be possible)
-- Try to make it more efficient if possible. (QBasic is slow enough for me
-  not to make it worse)
+- Try to make it more efficient if possible.
 - Add the option to enter coordinates ? (not sure about that one...)
 - Make BMPs videos from the explorer.
 - Make the explorer page the default one and remove the main menu. (once

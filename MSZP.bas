@@ -2,8 +2,6 @@
 '                            Main Program
 '-----------------------------------------------------------------------
 
-DECLARE SUB Test_sub ()
-
 DECLARE SUB Load_Color_Settings ()
 DECLARE SUB Presentation ()
 DECLARE SUB Clear_text ()
@@ -80,9 +78,6 @@ Locate mandelbrot_menu_height + 3, 31: Color 2: Print "F2"
 Locate mandelbrot_menu_height + 4, 25: Color 15: Print "Press    to create BMP video" 'Video Mode 1 for now
 Locate mandelbrot_menu_height + 4, 31: Color 4: Print "F3"
 
-'Locate mandelbrot_menu_height + 5, 25: Color 15: Print "Press    to "
-'Locate mandelbrot_menu_height + 5, 31: Color 2: Print "F4"
-
 julia_menu_height = 15
 Locate julia_menu_height, 34: Color 15: Print "Julia Sets"
 
@@ -95,9 +90,6 @@ Locate julia_menu_height + 3, 31: Color 2: Print "F6"
 
 Locate julia_menu_height + 4, 25: Color 15: Print "Press    to create BMP video"
 Locate julia_menu_height + 4, 31: Color 4: Print "F7"
-
-'Locate julia_menu_height + 7, 25: Color 15: Print "Press   to see controls"
-'Locate julia_menu_height + 7, 31: Color 14: Print "C"
 
 'Listen to keyboard and take action
 Do
@@ -147,6 +139,7 @@ Do
 
     'F3 - Create BMP video
     If w$ = Chr$(0) + Chr$(61) Then
+        mode$ = "Mandelbrot"
        'GoSub Label_Video_Mode_2
         GoSub Label_Video_Mode_1
         Locate 18, 11: Color 2: Print "Images created, press any key to return to the main menu"
@@ -211,10 +204,17 @@ Do
     End If
 
     'F7 - Create Julia BMP video - To remake completely
-    'If w$ = Chr$(0) + Chr$(65) Then
-    '    GoSub videobmpjuliasp1
-    '    GoTo Main_menu
-    'End If
+    If w$ = Chr$(0) + Chr$(65) Then
+       mode$ = "Julia"
+       'GoSub Label_Video_Mode_2
+        GoSub Label_Video_Mode_1
+        Locate 18, 11: Color 2: Print "Images created, press any key to return to the main menu"
+
+        Do
+            w$ = InKey$
+        Loop Until w$ <> ""
+        GoTo Main_menu
+    End If
 
     'C - See controls
     'If w$ = "c" Or w$ = "C" and mode$ = "Julia" Then
@@ -325,7 +325,24 @@ Do
 
         'Color settings selection
         Show_status 2, 2, "Select color profile", 15, "Press F1 - F2", 14
-        color_settings = 2 'Forced for testing - to be replaced by inkey$
+        'color_settings = 2 'Forced for testing - to be replaced by inkey$
+        Do
+            w$ = InKey$
+
+            If w$ = Chr$(0) + Chr$(59) Then 'F1
+                color_settings = 1
+            End If
+        
+            If w$ = Chr$(0) + Chr$(60) Then 'F2
+                color_settings = 2
+            End If
+        
+            If w$ = Chr$(27) Then 'Esc
+                Stop
+            End If
+        Loop Until w$ <> ""
+        
+
         If color_settings = 1 Then
             Show_status 2, 2, "Number of cycles:", 15, "By default: 1", 7
             Locate 5, 2: Color 2: Input user_input$
@@ -375,34 +392,24 @@ Do
             End If
         
             If w$ = Chr$(0) + Chr$(63) Then 'F5
-                longueur = 200
-                hauteur = 200
+                longueur = 3840
+                hauteur = 2160
             End If
 
             If w$ = Chr$(0) + Chr$(64) Then 'F6
-                longueur = 356
-                hauteur = 200
+                longueur = 7680
+                hauteur = 4320
             End If
 
             If w$ = Chr$(0) + Chr$(65) Then 'F7
-                longueur = 400
-                hauteur = 400
+                longueur = 15360
+                hauteur = 8640
             End If
 
             If w$ = Chr$(0) + Chr$(66) Then 'F8
-                longueur = 712
-                hauteur = 400
+                longueur = 30720
+                hauteur = 17280
             End If
-        
-            'If w$ = Chr$(0) + Chr$(67) Then 'F9
-            '    longueur = 400
-            '    hauteur = 400
-            'End If
-        
-            'If w$ = Chr$(0) + Chr$(68) Then 'F10
-            '    longueur = 400
-            '    hauteur = 400
-            'End If
         
             If w$ = Chr$(27) Then 'Esc
                 Stop
@@ -640,12 +647,12 @@ Label_BMP_Creator_Page: '___________________________________ BMP Creator
     Locate 15, 20: Color 2: Print "This will be the name of the BMP file"
     Locate 14, 32: Color 2: Input file_name$ 'No more 8 character limit with QB64
 
-    'Creates folders
+    'Path selection
     If mode$ = "Mandelbrot" Then
-        Shell "md Data\Mandelbrot"
+        'Shell "md Data\Mandelbrot"
         mode_path$ = "Data/Mandelbrot/"
     ElseIf mode$ = "Julia" Then
-        Shell "md Data\Julia"
+        'Shell "md Data\Julia"
         mode_path$ = "Data/Julia/"
     End If
 
@@ -673,6 +680,36 @@ Label_BMP_Creator_Page: '___________________________________ BMP Creator
 
     'Color settings selection
     BMP_color_profile_select
+
+    If color_settings = 1 Then
+        Cls
+        Presentation
+        Locate 14, 20: Color 15: Print "Number of cycles: "
+        Locate 15, 20: Color 15: Print "By default: 1"
+        Locate 14, 41: Color 2: Input user_input$
+        
+        cycles_nb# = VAL(user_input$)
+        If cycles_nb# <= 0 or cycles_nb# > 10000 Then
+            cycles_nb# = 1
+            cycle_length = int(precision / cycles_nb#)
+        Else
+            cycle_length = int(precision / cycles_nb#)
+        End If
+    Elseif color_settings = 2 Then
+        Cls
+        Presentation
+        Locate 14, 20: Color 15: Print "Cycle length: "
+        Locate 15, 20: Color 15: Print "By default: " + RS$(precision)
+        Locate 14, 34: Color 2: Input user_input$
+        
+        cycle_length = VAL(user_input$)
+        If cycle_length <= 2 or cycle_length > 1000000 Then
+            cycle_length = precision
+        End If
+    End If
+
+    'Load color settings
+    Load_Color_Settings
 
     'Resolution selection
     Resolution_select
@@ -767,17 +804,26 @@ Label_Video_Mode_1: '______________________________________ Video Mode 1
     Cls
     Presentation
     If error1 = 1 Then
-        Locate 16, 20: Color 4: Print "Need video name to create video"
+        Locate 16, 20: Color 4: Print "Need data file name to create video"
     End If
-    Locate 14, 20: Color 15: Print "Video name: "
-    Locate 14, 31: Color 2: Input video_name$ 'No more 8 character limit with QB64
+    Locate 14, 20: Color 15: Print "Data file name: "
+    Locate 14, 36: Color 2: Input video_name$ 'No more 8 character limit with QB64
     If video_name$ = "" Then
         error1 = 1
         GoTo Label_Video_Mode_1
     End If
 
+    'Path selection
+    If mode$ = "Mandelbrot" Then
+        'Shell "md Data\Mandelbrot"
+        mode_path$ = "Data/Mandelbrot/"
+    ElseIf mode$ = "Julia" Then
+        'Shell "md Data\Julia"
+        mode_path$ = "Data/Julia/"
+    End If
+
     'Loads data from file about target image ("pas" calculated for 200x200 image)
-    Open "Data/" + video_name$ + ".txt" For Input As #1
+    Open mode_path$ + video_name$ + ".txt" For Input As #1
         Input #1, x_coord_end#
         Input #1, y_coord_end#
         Input #1, view_size_end#
@@ -824,6 +870,41 @@ Label_Video_Mode_1: '______________________________________ Video Mode 1
     'Color settings selection
     BMP_color_profile_select
 
+    If color_settings = 1 Then
+        Cls
+        Presentation
+        Locate 14, 20: Color 15: Print "Number of cycles: "
+        Locate 15, 20: Color 15: Print "By default: 1"
+        Locate 14, 41: Color 2: Input user_input$
+        
+        cycles_nb# = VAL(user_input$)
+        If cycles_nb# <= 0 or cycles_nb# > 10000 Then
+            cycles_nb# = 1
+            cycle_length = int(precision_max / cycles_nb#)
+            'cycle_length = int(precision / cycles_nb#)
+        Else
+            cycle_length = int(precision_max / cycles_nb#)
+            'cycle_length = int(precision / cycles_nb#)
+        End If
+    Elseif color_settings = 2 Then
+        'Show_status 2, 2, "Cycle length:", 15, "By default: " + RS$(precision), 7
+        'Locate 5, 2: Color 2: Input user_input$
+        
+        Cls
+        Presentation
+        Locate 14, 20: Color 15: Print "Cycle length: "
+        Locate 15, 20: Color 15: Print "By default: " + RS$(precision_max)
+        Locate 14, 34: Color 2: Input user_input$
+        
+        cycle_length = VAL(user_input$)
+        If cycle_length <= 2 or cycle_length > 1000000 Then
+            cycle_length = precision_max
+        End If
+    End If
+
+    'Load color settings
+    Load_Color_Settings
+
     'Resolution selection
     Resolution_select
 
@@ -842,9 +923,15 @@ Label_Video_Mode_1: '______________________________________ Video Mode 1
 
     'Creates the "Video" directory if needed - No check but seems to work...
     Shell "md Videos"
+    If mode$ = "Mandelbrot" Then
+        Shell "md Videos\Mandelbrot"
+        mode_path$ = "Videos/Mandelbrot/"
+    ElseIf mode$ = "Julia" Then
+        Shell "md Videos\Julia"
+        mode_path$ = "Videos/Julia/"
+    End If
 
-    full_folder_path$ = "Videos/" + video_name$ + " - vm" + RS$(video_mode) + " - cp" + RS$(color_settings)
-    'Shell "md " + full_folder_path$
+    full_folder_path$ = mode_path$ + video_name$ + " - vm" + RS$(video_mode) + " - cp" + RS$(color_settings)
     Shell "md " + chr$(34) + full_folder_path$ + chr$(34)
 
     'Saves log file
@@ -854,6 +941,9 @@ Label_Video_Mode_1: '______________________________________ Video Mode 1
 
     'w# = zoom coeficient
     w# = (view_size_start# / view_size_end#) ^ (1 / (ni - 1))
+
+    'Information display setting
+    BMP_creator_stealth = 0
 
     'Discards first image when necesarry
     If first_image_nb > 1 Then
@@ -869,7 +959,8 @@ Label_Video_Mode_1: '______________________________________ Video Mode 1
         num$ = Right$(num$, Len(num$) - 1)
         num$ = Right$("000000" + num$, 6)
         imagename$ = full_folder_path$ + "/I-" + num$
-        name$ = imagename$ + ".bmp"
+        full_file_name$ = imagename$ + ".bmp"
+        file_path$ = full_file_name$
 
         'Calculates max iterations
         a# = (f - 1) / (ni - 1)
@@ -880,7 +971,7 @@ Label_Video_Mode_1: '______________________________________ Video Mode 1
         If f = first_image_nb and discard_first = 1 Then
             'Nothing here
         Else
-            BMPmandelbrot
+            BMP_Creator
         End If
 
         'New parameters
@@ -895,7 +986,7 @@ Return
 
 
 '-----------------------------------------------------------------------
-'                       Mandelbrot - Video Mode 2
+'                       Mandelbrot - Video Mode 2 - Obsolete
 '-----------------------------------------------------------------------
 
 Label_Video_Mode_2: '______________________________________ Video Mode 2

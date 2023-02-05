@@ -2,21 +2,6 @@
 '           File containing all subs used for creating BMPs
 '-----------------------------------------------------------------------
 
-'Test sub
-SUB Test_sub
-    Shared start_with$, fade_to_black, cycle_length, nb_colors_used, palette_pos#(), palette_color()
-
-    Open "test.txt" For Output As #1
-        Print #1, "Start with ="; start_with$
-        Print #1, "Fade to black ="; fade_to_black
-        Print #1, "cycle_length ="; cycle_length
-        Print #1, "nb_colors_used ="; nb_colors_used
-        For i = 1 to nb_colors_used
-            Print #1, "["; palette_pos#(i); ",";palette_color(i, 1); ","; palette_color(i, 2); ","; palette_color(i, 3); "]"
-        Next i
-    Close #1
-End Sub
-
 'Load color settings and palette
 SUB Load_Color_Settings
     Shared start_with$, fade_to_black, cycle_length, nb_colors_used, palette_pos#(), palette_color()
@@ -94,10 +79,14 @@ SUB Load_Color_Settings
             IF palette_color(color_index, 2) < 0 THEN palette_color(color_index, 2) = 0
             IF palette_color(color_index, 3) < 0 THEN palette_color(color_index, 3) = 0
         END IF
-
-        'Duplicate 1st color to position 1
-        'Code
     LOOP
+
+    'Duplicate first color to position 1
+    palette_pos#(nb_colors_used + 1) = 1
+    palette_color(nb_colors_used + 1, 1) = palette_color(1, 1)
+    palette_color(nb_colors_used + 1, 2) = palette_color(1, 2)
+    palette_color(nb_colors_used + 1, 3) = palette_color(1, 3)
+    nb_colors_used = nb_colors_used + 1
 
     'Close file
     CLOSE #1
@@ -130,7 +119,7 @@ Sub Get_pixel_color_BMP ()
         position_in_cycle# = (C MOD cycle_length) / cycle_length
 
         If precision >= 3 * color_length Then 'Modify to adapt better to precision
-            low_threshold = color_length
+            low_threshold = 2 * color_length
         Else
             low_threshold = 75
         End If
@@ -403,6 +392,7 @@ END Sub
 Sub BMP_Creator
     Shared mode$, file_path$, full_file_name$, longueur, hauteur, precision, ni, f, time_start, date_start$, color_settings, precision_min, precision_max, x_coord#, y_coord#, view_size#, w#, r$, g$, b$, color_error_counter, C, xC#, yC#, BMP_creator_stealth
 
+    'Obsolete ?
     pas# = view_size# / hauteur
     debutx# = x_coord# - (longueur / 2 * pas#)
     debuty# = y_coord# - (hauteur / 2 * pas#)
@@ -441,18 +431,15 @@ Sub BMP_Creator
 
     'Bitmap header - Tried splitting in 2 for 4k and 8k images, but doesn't work
     B$ = headersize$ + width$ + height$ + Left$(nbplan$, 2) + Left$(nbpp$, 2) + String$(4, Chr$(0)) + sizeimage$ + String$(16, Chr$(0))
-    'B1$ = headersize$ + width$ + height$ + Left$(nbplan$, 2) + Left$(nbpp$, 2) + String$(4, Chr$(0))
-    'B2$ = sizeimage$ + String$(16, Chr$(0))
 
     'Output bitmap header to file
     Put #2, 15, B$
-    'Put #2, 15, B1$
-    'Put #2, 15 + Len(B1$), B2$
 
     'Reset variables
     color_error_counter = 0
     total_pixels = 0
     color_error_percent# = 0
+    DIM AS LONG compteur
     compteur = 0 'To get position for writing in BMP file
     x = 0
     y = 0
@@ -466,7 +453,7 @@ Sub BMP_Creator
 
         'Progress bar for nb images
         If ni > 1 Then
-            Progress_bar 80, 257, 500, 10, ni - 1, f - 1
+            Progress_bar 80, 255, 500, 6, ni - 1, f - 1
         End If
 
         Locate 5, 11: Color 15: Print "X Coord:"
@@ -537,7 +524,7 @@ Sub BMP_Creator
                 Put #2, 54 + compteur, g$
                 compteur = compteur + 1
                 Put #2, 54 + compteur, r$
-            
+
                 x = x + 1
                 xC# = xC# + pas#
             Loop Until x = longueur
@@ -548,7 +535,7 @@ Sub BMP_Creator
                 Locate 18, 27: Color 2: Print RS$(f); "/"; RS$(ni)
                 
                 'Progress bar
-                Progress_bar 80, 250, 500, 10, hauteur - 1, y
+                Progress_bar 80, 250, 500, 8, hauteur - 1, y
             Else
                 'Progress bar
                 Progress_bar 10, 65, 195, 6, hauteur - 1, y
@@ -604,7 +591,7 @@ Sub BMP_Creator
                 Locate 18, 27: Color 2: Print RS$(f); "/"; RS$(ni)
                 
                 'Progress bar
-                Progress_bar 80, 250, 500, 10, hauteur - 1, y
+                Progress_bar 80, 250, 500, 8, hauteur - 1, y
             Else
                 'Progress bar
                 Progress_bar 10, 65, 195, 6, hauteur - 1, y
@@ -636,7 +623,6 @@ Sub BMP_Creator
             Locate 23, 11: Color 15: Print "Number pixels with color errors: "
             Locate 23, 44: Color color_error_color: Print  RS$(color_error_counter); "/"; RS$(total_pixels); " ("; RS$(ROUND(color_error_percent#, 2)); "%)"
         End If
-
     Else
         'Display status
         Show_status 2, 2, "BMP image created", 2, "Elapsed: " + Elapsed_time$(time_start, date_start$, TIMER, DATE$), 7
@@ -1204,24 +1190,15 @@ Sub Resolution_select
     Locate 13, 25: Color 2: Print "F4"
     Locate 13, 28: Color 15: Print "- 2560 x 1440"
 
-    Locate 16, 25: Color 15: Print "Preview oriented:"
+    Locate 16, 25: Color 15: Print "UHD Resolutions:"
     Locate 18, 25: Color 14: Print "F5"
-    Locate 18, 28: Color 15: Print "- 200 x 200"
+    Locate 18, 28: Color 15: Print "- 3840 x 2160 (4k)"
     Locate 19, 25: Color 14: Print "F6"
-    Locate 19, 28: Color 15: Print "- 356 x 200"
+    Locate 19, 28: Color 15: Print "- 7680 x 4320 (8k)"
     Locate 20, 25: Color 14: Print "F7"
-    Locate 20, 28: Color 15: Print "- 400 x 400"
+    Locate 20, 28: Color 15: Print "- 15360 x 8640 (16k)"
     Locate 21, 25: Color 14: Print "F8"
-    Locate 21, 28: Color 15: Print "- 712 x 400"
-    longueur = 0
-
-    'UHD for testing
-    '8K
-    'longueur = 7680
-    'hauteur = 4320
-    '4K
-    'longueur = 3840
-    'hauteur = 2160
+    Locate 21, 28: Color 15: Print "- 30720 x 17280 (32k)"
 
     Do
         w$ = InKey$
@@ -1247,39 +1224,29 @@ Sub Resolution_select
         End If
     
         If w$ = Chr$(0) + Chr$(63) Then 'F5
-            longueur = 200
-            hauteur = 200
+            longueur = 3840
+            hauteur = 2160
         End If
 
         If w$ = Chr$(0) + Chr$(64) Then 'F6
-            longueur = 356
-            hauteur = 200
+            longueur = 7680
+            hauteur = 4320
         End If
 
         If w$ = Chr$(0) + Chr$(65) Then 'F7
-            longueur = 400
-            hauteur = 400
+            longueur = 15360
+            hauteur = 8640
         End If
 
         If w$ = Chr$(0) + Chr$(66) Then 'F8
-            longueur = 712
-            hauteur = 400
+            longueur = 30720
+            hauteur = 17280
         End If
-    
-        'If w$ = Chr$(0) + Chr$(67) Then 'F9
-        '    longueur = 400
-        '    hauteur = 400
-        'End If
-    
-        'If w$ = Chr$(0) + Chr$(68) Then 'F10
-        '    longueur = 400
-        '    hauteur = 400
-        'End If
     
         If w$ = Chr$(27) Then 'Esc
             Stop
         End If
-    Loop Until longueur > 0
+    Loop Until w$ = ""
 End Sub
 
 Sub BMP_color_profile_select
@@ -1289,15 +1256,15 @@ Sub BMP_color_profile_select
     Presentation
     Locate 8, 25: Color 2: Print "Choose color profile:"
     Locate 9, 25: Color 2: Print "F1"
-    Locate 9, 28: Color 15: Print "- Use palette values (New!)"
+    Locate 9, 28: Color 15: Print "- Use palette system (nb cycles)"
     Locate 10, 25: Color 2: Print "F2"
-    Locate 10, 28: Color 15: Print "- Green/blue on black background"
+    Locate 10, 28: Color 15: Print "- Use palette system (cycle length)"
     Locate 11, 25: Color 2: Print "F3"
-    Locate 11, 28: Color 15: Print "- Green/purple on white background"
-    Locate 12, 25: Color 4: Print "F4"
-    Locate 12, 28: Color 15: Print "- To identify/fix"
-    Locate 13, 25: Color 4: Print "F5"
-    Locate 13, 28: Color 15: Print "- To identify/fix"
+    Locate 11, 28: Color 15: Print "- Green/blue on black background"
+    'Locate 12, 25: Color 4: Print "F4"
+    'Locate 12, 28: Color 15: Print "- To identify/fix"
+    'Locate 13, 25: Color 4: Print "F5"
+    'Locate 13, 28: Color 15: Print "- To identify/fix"
 
     'Default color settings
     color_settings = 0
@@ -1317,13 +1284,13 @@ Sub BMP_color_profile_select
             color_settings = 3
         End If
     
-        If w$ = Chr$(0) + Chr$(62) Then 'F4
-            color_settings = 4
-        End If
+        ' If w$ = Chr$(0) + Chr$(62) Then 'F4
+        '     color_settings = 4
+        ' End If
     
-        If w$ = Chr$(0) + Chr$(63) Then 'F5
-            color_settings = 5
-        End If
+        ' If w$ = Chr$(0) + Chr$(63) Then 'F5
+        '     color_settings = 5
+        ' End If
     
         'If w$ = Chr$(0) + Chr$(67) Then 'F9
         '    color_settings = 9

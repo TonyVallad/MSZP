@@ -4,19 +4,18 @@
 
 _____________________________ Color settings ___________________________
 
-Start from = black
+Start from = white
 Fade to black = 1
 
 ________________________________ Palette _______________________________
 
 Cycle length = 2048
-Number of colors = 6
+Number of colors = 5
 [0, 0, 7, 100]
 [0.16, 32, 107, 203]
 [0.42, 237, 255, 255]
 [0.6425, 255, 170, 0]
 [0.8575, 0, 2, 0]
-[1, 0, 7, 100]
 
 - End of settings -
 
@@ -73,45 +72,43 @@ _______________________________ Custom 1 _______________________________
 Blue, black, green, black, blue
 
 Cycle length = 150
-Number of colors = 5
+Number of colors = 4
 [0, 0, 75, 255]
 [0.15, 0, 0, 0]
 [0.5, 0, 255, 75]
 [0.85, 0, 0, 0]
-[1, 0, 75, 255]
 
 _______________________________ Custom 2 _______________________________
 Black, cyan, black, blue, black, green, black
 
 Cycle length = 150
-Number of colors = 7
+Number of colors = 6
 [0, 0, 0, 0]
 [0.15, 0, 255, 255]
 [0.33, 0, 0, 0]
 [0.5, 0, 75, 255]
 [0.66, 0, 0, 0]
 [0.85, 0, 255, 75]
-[1, 0, 0, 0]
 
 _______________________________ Custom 3 _______________________________
 Black, cyan, black, blue, green, black
 
 Cycle length = 150
-Number of colors = 5
-[0, 0, 0, 0]noir
-[0.15, 0, 255, 255]cyan
+Number of colors = 4
+[0, 0, 0, 0]
+[0.15, 0, 255, 255]
 [0.5, 0, 0, 255]
-[0.85, 0, 255, 0]vert
-[1, 0, 0, 0]noir
+[0.85, 0, 255, 0]
+
 _______________________________ Custom 4 _______________________________
 Black, blue, cyan, green, black
 
 Cycle length = 150
-Number of colors = 5
+Number of colors = 4
 [0, 2, 0, 36]
 [0.25, 0, 44, 148]
 [0.65, 141, 255, 255]
 [0.82, 0, 255, 16]
-[1, 2, 0, 36]
+
 ______________________________ Custom ... ______________________________
 
