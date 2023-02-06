@@ -116,7 +116,12 @@ Sub Get_pixel_color_BMP ()
         'cycle_length = nb_colors_used * 100 'Forced 100 * nb_colors for testing
         'cycle_length = precision 'Forced for testing
         color_length = int(cycle_length / nb_colors_used)
-        position_in_cycle# = (C MOD cycle_length) / cycle_length
+
+        'Separating C int and decimal for MOD to work (color smoothing)
+        C_int = int(C)
+        C_dec = C - int(C)
+
+        position_in_cycle# = (C_int MOD cycle_length) / cycle_length + C_dec / cycle_length
 
         If precision >= 3 * color_length Then 'Modify to adapt better to precision
             low_threshold = 2 * color_length
@@ -440,6 +445,7 @@ Sub BMP_Creator
     total_pixels = 0
     color_error_percent# = 0
     DIM AS LONG compteur
+    DIM AS DOUBLE xx, yy
     compteur = 0 'To get position for writing in BMP file
     x = 0
     y = 0
@@ -511,6 +517,14 @@ Sub BMP_Creator
                     C = C + 1
                 Loop Until C = precision Or flag = 1
 
+                'Color gradient smoothing - Log-log
+                If flag = 1 Then
+                    'Decimal iteration
+                    xx = Log(x2# * x2# + y2# * y2#) / 2
+                    yy = Log(xx / Log(2)) / Log(2)
+                    C = C + 1 - yy
+                End If
+
                 'Total number of pixels
                 total_pixels = total_pixels + 1
 
@@ -535,7 +549,7 @@ Sub BMP_Creator
                 Locate 18, 27: Color 2: Print RS$(f); "/"; RS$(ni)
                 
                 'Progress bar
-                Progress_bar 80, 250, 500, 8, hauteur - 1, y
+                Progress_bar 80, 246, 500, 6, hauteur - 1, y
             Else
                 'Progress bar
                 Progress_bar 10, 65, 195, 6, hauteur - 1, y
@@ -562,6 +576,14 @@ Sub BMP_Creator
                     y1# = y2#
                     C = C + 1
                 Loop Until C = precision Or flag = 1
+
+                'Color gradient smoothing - Log-log
+                If flag = 1 Then
+                    'Decimal iteration
+                    xx = Log(x2# * x2# + y2# * y2#) / 2
+                    yy = Log(xx / Log(2)) / Log(2)
+                    C = C + 1 - yy
+                End If
 
                 'Total number of pixels
                 total_pixels = total_pixels + 1
@@ -1199,6 +1221,7 @@ Sub Resolution_select
     Locate 20, 28: Color 15: Print "- 15360 x 8640 (16k)"
     Locate 21, 25: Color 14: Print "F8"
     Locate 21, 28: Color 15: Print "- 30720 x 17280 (32k)"
+    longueur = 0
 
     Do
         w$ = InKey$
@@ -1246,7 +1269,7 @@ Sub Resolution_select
         If w$ = Chr$(27) Then 'Esc
             Stop
         End If
-    Loop Until w$ = ""
+    Loop Until longueur > 0
 End Sub
 
 Sub BMP_color_profile_select

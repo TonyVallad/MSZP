@@ -76,7 +76,7 @@ Locate mandelbrot_menu_height + 3, 25: Color 15: Print "Press    to create BMP i
 Locate mandelbrot_menu_height + 3, 31: Color 2: Print "F2"
 
 Locate mandelbrot_menu_height + 4, 25: Color 15: Print "Press    to create BMP video" 'Video Mode 1 for now
-Locate mandelbrot_menu_height + 4, 31: Color 4: Print "F3"
+Locate mandelbrot_menu_height + 4, 31: Color 2: Print "F3"
 
 julia_menu_height = 15
 Locate julia_menu_height, 34: Color 15: Print "Julia Sets"
@@ -428,6 +428,9 @@ Do
         'Saves Data file
         Save_variables file_name$, x_coord#, y_coord#, view_size#, nbzoom, precision
 
+        'Show information box
+        Show_bmp_information parameters_height + 8, 2
+
         'Creates BMP
         BMP_Creator
 
@@ -741,63 +744,7 @@ Label_BMP_Creator_Page: '___________________________________ BMP Creator
 Return
 
 '-----------------------------------------------------------------------
-'                          Mandelbrot BMP Page - Obsolete
-'-----------------------------------------------------------------------
-
-Label_Mandelbrot_BMP: '__________________________________ Mandelbrot BMP
-    Cls
-    Presentation
-    Locate 14, 20: Color 15: Print "Image Name: "
-    Locate 15, 20: Color 2: Print "This will be the name of the BMP file"
-    Locate 14, 32: Color 2: Input image_name$ 'No more 8 character limit with QB64
-
-    'Load parameters from file
-    Open "Data/" + image_name$ + ".txt" For Input As #1
-        Input #1, x_coord#
-        Input #1, y_coord#
-        Input #1, view_size#
-        Input #1, nbzoom
-        Input #1, precision_default
-    Close #1
-
-    Cls
-    Presentation
-    Locate 14, 20: Color 15: Print "Max iterations: "
-    Locate 15, 20: Color 14: Print "By default:"; Str$(precision_default)
-    Locate 14, 36: Color 2: Input precision
-    If precision < 2 Then
-        precision = precision_default
-    End If
-
-    'Color settings selection
-    BMP_color_profile_select
-
-    'Resolution selection
-    Resolution_select
-
-    'Temporary solution to center image horizontally
-    pas# = pas# * 768 / hauteur
-    debutx# = debutx# - ((longueur - 1024) / 2) * (pas# * 0.6)
-
-    debutx# = debutx# - .6 * (pas# / .01)
-    debuty# = debuty# + .08 * (pas# / .01)
-    pas# = pas# / 2
-
-    Shell "md Photos"
-    Path$ = "Photos/"
-    name$ = Path$ + image_name$ + " - " + RS$(precision) + "max - cp" + RS$(color_settings) + " - " + RS$(longueur) + "x" + RS$(hauteur) + ".bmp"
-
-    time_start = TIMER
-    date_start$ = DATE$
-
-    BMPmandelbrot
-
-    'Reset variables
-    precision_default = 250
-Return
-
-'-----------------------------------------------------------------------
-'                       Mandelbrot - Video Mode 1
+'                       Mandelbrot - Video Mode 1 [Important]
 '-----------------------------------------------------------------------
 
 Label_Video_Mode_1: '______________________________________ Video Mode 1
@@ -982,188 +929,6 @@ Label_Video_Mode_1: '______________________________________ Video Mode 1
 
     'Reset variables
     precision_default = 250
-Return
-
-
-'-----------------------------------------------------------------------
-'                       Mandelbrot - Video Mode 2 - Obsolete
-'-----------------------------------------------------------------------
-
-Label_Video_Mode_2: '______________________________________ Video Mode 2
-    Cls
-    Presentation
-    If error1 = 1 Then
-        Locate 15, 20: Color 4: Print "Need video name to create folder"
-    End If
-    Locate 14, 20: Color 15: Print "Video name: "
-    Locate 14, 31: Color 2: Input video_name$ 'No more 8 character limit with QB64
-    If video_name$ = "" Then
-        error1 = 1
-        'GoTo videocreation
-    End If
-
-    'Loads data from file
-    Open "Data/" + video_name$ + ".txt" For Input As #1
-        Input #1, debutx#
-        Input #1, debuty#
-        Input #1, pas#
-        Input #1, nbzoom
-        Input #1, precision_default
-    Close #1
-
-    Cls
-    Presentation
-    Locate 14, 20: Color 15: Print "Max iterations (start): "
-    Locate 15, 20: Color 14: Print "By default: 2"
-    Locate 14, 44: Color 2: Input precision_min
-    If precision_min < 2 Then
-        precision_min = 2
-    End If
-
-    Cls
-    Presentation
-    Locate 14, 20: Color 15: Print "Max iterations (end): "
-    Locate 15, 20: Color 14: Print "By default: "; SR$(precision_default)
-    Locate 14, 43: Color 2: Input precision_max
-    If precision_max < 2 Then
-        precision_max = precision_default
-    End If
-
-    Cls
-    Presentation
-    Locate 14, 20: Color 15: Print "Nb images: "
-    Locate 15, 20: Color 14: Print "2 < nb images < 5000 - Default: 10"
-    Locate 14, 31: Color 2: Input ni
-    If ni < 2 Or ni > 5000 Then
-        ni = 10
-    End If
-
-    'Color settings selection
-    Cls
-    Presentation
-    Locate 8, 25: Color 2: Print "Color settings:"
-    Locate 9, 25: Color 2: Print "F1"
-    Locate 9, 28: Color 15: Print "- RGB set to certain frequencies"
-    Locate 10, 25: Color 2: Print "F2"
-    Locate 10, 28: Color 15: Print "- Green/purple on white background"
-    Locate 11, 25: Color 2: Print "F3"
-    Locate 11, 28: Color 15: Print "- Green/purple on black background"
-    Locate 12, 25: Color 4: Print "F4"
-    Locate 12, 28: Color 15: Print "- To identify/fix"
-    Locate 13, 25: Color 4: Print "F5"
-    Locate 13, 28: Color 15: Print "- To identify/fix"
-    color_settings = 0
-
-    Do
-        w$ = InKey$
-
-        If w$ = Chr$(0) + Chr$(59) Then 'F1
-            color_settings = 1
-        End If
-    
-        If w$ = Chr$(0) + Chr$(60) Then 'F2
-            color_settings = 2
-        End If
-    
-        If w$ = Chr$(0) + Chr$(61) Then 'F3
-            color_settings = 3
-        End If
-    
-        If w$ = Chr$(0) + Chr$(62) Then 'F4
-            color_settings = 4
-        End If
-    
-        If w$ = Chr$(0) + Chr$(63) Then 'F5
-            color_settings = 5
-        End If
-    
-        'If w$ = Chr$(0) + Chr$(67) Then 'F9
-        '    color_settings = 9
-        'End If
-    
-        'If w$ = Chr$(0) + Chr$(68) Then 'F10
-        '    color_settings = 10
-        'End If
-    
-        If w$ = Chr$(27) Then 'Esc
-            Stop
-        End If
-    Loop Until color_settings > 0
-
-    Resolution_select
-
-    Shell "md Videos"
-    ChDir "Videos"
-    Shell "md " + video_name$
-    ChDir ".."
-
-    debutx# = debutx# - .6 * (pas# / .01)
-    debuty# = debuty# + .08 * (pas# / .01)
-    pas# = pas# / 2
-    precision = precision_min
-    precision_range = precision_max - precision_min
-    time_start = TIMER
-    date_start$ = DATE$
-
-    'Temporary solution to center image horizontally
-    pas# = pas# * 768 / hauteur
-    'debutx# = debutx# - ((longueur - 1024) / 2) * (pas# * 0.6)
-
-    For f = 1 To ni
-        num$ = Str$(f)
-        num$ = Right$(num$, Len(num$) - 1)
-        num$ = Right$("0000" + num$, 4)
-        imagename$ = video_name$ + "/I-" + num$
-        name$ = "Videos/" + imagename$ + ".bmp"
-        BMPmandelbrot
-        precision = precision + Int(precision_range / ni)
-    Next f
-
-    'Reset variables
-    precision_default = 250
-
-Return
-
-'-----------------------------------------------------------------------
-'                             Julia Sets - BMP - Obsolete
-'-----------------------------------------------------------------------
-
-Label_Julia_BMP: '____________________________________________ Julia BMP
-    Cls
-    Presentation
-    Locate 14, 20: Color 15: Print "Image Name: "
-    Locate 15, 20: Color 2: Print "This will be the name of the BMP file"
-    Locate 14, 32: Color 2: Input imagename$ 'No more 8 character limit with QB64
-    Cls
-    Presentation
-    Locate 14, 30: Color 15: Print "Enter xC: "
-    Locate 14, 47: Color 15: Print "-3 < xC < 3"
-    Locate 14, 40: Color 2: Input xC#
-    Locate 15, 30: Color 15: Print "Enter yC: "
-    Locate 15, 47: Color 15: Print "-3 < yC < 3"
-    Locate 15, 40: Color 2: Input yC#
-    Locate 16, 30: Color 15: Print "Max iterations: "
-    Locate 17, 30: Color 14: Print "By default:"; Str$(precision_default)
-    Locate 16, 46: Color 2: Input precision
-    If precision < 2 Then
-        precision = precision_default
-    End If
-
-    debutx# = -2
-    debuty# = -2
-    pas# = .01
-
-    debutx# = debutx# - .6 * (pas# / .01)
-    debuty# = debuty# + .08 * (pas# / .01)
-    pas# = pas# / 2
-
-    Shell "md Photos"
-    name$ = "Photos/" + imagename$ + ".bmp"
-
-    longueur = 1024
-    hauteur = 768
-
-    BMPjulia
 Return
 
 '-----------------------------------------------------------------------
