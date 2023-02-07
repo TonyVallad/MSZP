@@ -4,7 +4,7 @@
 
 'Load color settings and palette
 SUB Load_Color_Settings
-    Shared start_with$, fade_to_black, cycle_length, nb_colors_used, palette_pos#(), palette_color()
+    Shared start_with$, low_threshold_start, low_threshold_end, fade_to_black, cycle_length, nb_colors_used, palette_pos#(), palette_color()
 
     'File path
     file_path$ = "color-settings.txt"
@@ -33,17 +33,22 @@ SUB Load_Color_Settings
             start_with$ = "black"
         END IF
 
+        'Low_threshold_start
+        IF LEFT$(current_line$, 21) = "low_threshold_start =" THEN
+           low_threshold_start = VAL(MID$(current_line$, 22))
+        END IF
+
+        'Low_threshold_end
+        IF LEFT$(current_line$, 19) = "low_threshold_end =" THEN
+           low_threshold_end = VAL(MID$(current_line$, 20))
+        END IF
+
         'Fade to black
         IF current_line$ = "Fade to black = 1" THEN
             fade_to_black = 1
         ELSEIF current_line$ = "Fade to black = 0" THEN
             fade_to_black = 0
         END IF
-
-        'Cycle length - Not necesarry anymore. Maybe later...
-        'IF LEFT$(current_line$, 14) = "Cycle length =" THEN
-        '    cycle_length = VAL(MID$(current_line$, 16))
-        'END IF
 
         'Number of colors
         IF LEFT$(current_line$, 18) = "Number of colors =" THEN
@@ -94,7 +99,7 @@ END SUB
 
 'Color profiles inside (for explorer)
 Sub Get_pixel_color_BMP ()
-    Shared color_settings, start_with$, fade_to_black, cycle_length, nb_colors_used, precision, r, g, b, r$, g$, b$, color_error_counter, C, palette_pos#(), palette_color()
+    Shared color_settings, start_with$, low_threshold_start, low_threshold_end, fade_to_black, cycle_length, nb_colors_used, precision, r, g, b, r$, g$, b$, color_error_counter, C, palette_pos#(), palette_color()
 
     'Frequencies (or resonances) - Used for old color profile. To delete
     'r_freq = 745
@@ -113,8 +118,6 @@ Sub Get_pixel_color_BMP ()
 
     'Color settings
     If color_settings = 1 Then 'Color palette - Number of cycles
-        'cycle_length = nb_colors_used * 100 'Forced 100 * nb_colors for testing
-        'cycle_length = precision 'Forced for testing
         color_length = int(cycle_length / nb_colors_used)
 
         'Separating C int and decimal for MOD to work (color smoothing)
@@ -123,32 +126,32 @@ Sub Get_pixel_color_BMP ()
 
         position_in_cycle# = (C_int MOD cycle_length) / cycle_length + C_dec / cycle_length
 
-        If precision >= 3 * color_length Then 'Modify to adapt better to precision
-            low_threshold = 2 * color_length
-        Else
-            low_threshold = 75
-        End If
-
         GetRGBValues nb_colors_used, position_in_cycle#
 
         'Start from white/black
-        'start_with$ = "white" 'Forced white for testing
         If start_with$ = "white" Then 'Start from white
-            If C < low_threshold Then
-                r = int(r + (low_threshold - C) * (255 - r) / low_threshold)
-                g = int(g + (low_threshold - C) * (255 - g) / low_threshold)
-                b = int(b + (low_threshold - C) * (255 - b) / low_threshold)
+            If C > low_threshold_start and C < low_threshold_end Then
+                r = int(r + (255 - r) * (low_threshold_end - C) / (low_threshold_end - low_threshold_start))
+                g = int(g + (255 - g) * (low_threshold_end - C) / (low_threshold_end - low_threshold_start))
+                b = int(b + (255 - b) * (low_threshold_end - C) / (low_threshold_end - low_threshold_start))
+            ElseIf C < low_threshold_start Then
+                r = 255
+                g = 255
+                b = 255
             End If
         ElseIf start_with$ = "black" Then 'Start from black
-            If C < low_threshold Then
-                r = int(r * c / low_threshold)
-                g = int(g * c / low_threshold)
-                b = int(b * c / low_threshold)
+            If C > low_threshold_start and C < low_threshold_end Then
+                r = int(r * (c - low_threshold_start) / (low_threshold_end - low_threshold_start))
+                g = int(g * (c - low_threshold_start) / (low_threshold_end - low_threshold_start))
+                b = int(b * (c - low_threshold_start) / (low_threshold_end - low_threshold_start))
+            ElseIf C < low_threshold_start Then
+                r = 0
+                g = 0
+                b = 0
             End If
         End If
 
         'Fade to black
-        'fade_to_black = 1 'Forced "on" for testing
         If fade_to_black = 1 Then
             If precision >= cycle_length Then
                 If C > (precision - (0.5 * color_length)) Then 'To fix
@@ -173,27 +176,28 @@ Sub Get_pixel_color_BMP ()
         color_length = int(cycle_length / nb_colors_used)
         position_in_cycle# = (C MOD cycle_length) / cycle_length
 
-        If precision >= 3 * color_length Then 'Modify to adapt better to precision
-            low_threshold = color_length
-        Else
-            low_threshold = 75
-        End If
-
         GetRGBValues nb_colors_used, position_in_cycle#
 
         'Start from white/black
-        'start_with$ = "white" 'Forced white for testing
         If start_with$ = "white" Then 'Start from white
-            If C < low_threshold Then
-                r = int(r + (low_threshold - C) * (255 - r) / low_threshold)
-                g = int(g + (low_threshold - C) * (255 - g) / low_threshold)
-                b = int(b + (low_threshold - C) * (255 - b) / low_threshold)
+            If C > low_threshold_start and C < low_threshold_end Then
+                r = int(r + (255 - r) * (low_threshold_end - C) / (low_threshold_end - low_threshold_start))
+                g = int(g + (255 - g) * (low_threshold_end - C) / (low_threshold_end - low_threshold_start))
+                b = int(b + (255 - b) * (low_threshold_end - C) / (low_threshold_end - low_threshold_start))
+            ElseIf C < low_threshold_start Then
+                r = 255
+                g = 255
+                b = 255
             End If
         ElseIf start_with$ = "black" Then 'Start from black
-            If C < low_threshold Then
-                r = int(r * c / low_threshold)
-                g = int(g * c / low_threshold)
-                b = int(b * c / low_threshold)
+            If C > low_threshold_start and C < low_threshold_end Then
+                r = int(r * (c - low_threshold_start) / (low_threshold_end - low_threshold_start))
+                g = int(g * (c - low_threshold_start) / (low_threshold_end - low_threshold_start))
+                b = int(b * (c - low_threshold_start) / (low_threshold_end - low_threshold_start))
+            ElseIf C < low_threshold_start Then
+                r = 0
+                g = 0
+                b = 0
             End If
         End If
 
@@ -511,13 +515,14 @@ Sub BMP_Creator
                 Do
                     x2# = x1# * x1# - y1# * y1# + xC# 'Coordonnees de z2+C
                     y2# = 2 * x1# * y1# + yC#
-                    If x2# * x2# + y2# * y2# > 4 Then flag = 1
+                    If x2# * x2# + y2# * y2# > 24 Then flag = 1
                     x1# = x2#
                     y1# = y2#
                     C = C + 1
                 Loop Until C = precision Or flag = 1
 
                 'Color gradient smoothing - Log-log
+                'Calculate how fast it's leaving the circle to get decimals
                 If flag = 1 Then
                     'Decimal iteration
                     xx = Log(x2# * x2# + y2# * y2#) / 2

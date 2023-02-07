@@ -5,11 +5,13 @@
 _____________________________ Color settings ___________________________
 
 Start from = black
+low_threshold_start = 10
+low_threshold_end = 25
+
 Fade to black = 1
 
 ________________________________ Palette _______________________________
 
-Cycle length = 2048
 Number of colors = 5
 [0, 0, 7, 100]
 [0.16, 32, 107, 203]
@@ -60,7 +62,6 @@ You can store palettes in this section.
 ________________________________ Default _______________________________
 Dark blue, light blue, white, yellow, black
 
-Cycle length = 2048
 Number of colors = 5
 [0, 0, 7, 100]
 [0.16, 32, 107, 203]
@@ -71,7 +72,6 @@ Number of colors = 5
 _______________________________ Custom 1 _______________________________
 Blue, black, green, black, blue
 
-Cycle length = 150
 Number of colors = 4
 [0, 0, 75, 255]
 [0.15, 0, 0, 0]
@@ -81,7 +81,6 @@ Number of colors = 4
 _______________________________ Custom 2 _______________________________
 Black, cyan, black, blue, black, green, black
 
-Cycle length = 150
 Number of colors = 6
 [0, 0, 0, 0]
 [0.15, 0, 255, 255]
@@ -93,7 +92,6 @@ Number of colors = 6
 _______________________________ Custom 3 _______________________________
 Black, cyan, black, blue, green, black
 
-Cycle length = 150
 Number of colors = 4
 [0, 0, 0, 0]
 [0.15, 0, 255, 255]
@@ -103,7 +101,6 @@ Number of colors = 4
 _______________________________ Custom 4 _______________________________
 Black, blue, cyan, green, black
 
-Cycle length = 150
 Number of colors = 4
 [0, 2, 0, 36]
 [0.25, 0, 44, 148]
