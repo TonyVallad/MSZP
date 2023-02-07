@@ -4,9 +4,9 @@
 
 _____________________________ Color settings ___________________________
 
-Start from = white
+Start from = black
 low_threshold_start = 10
-low_threshold_end = 150
+low_threshold_end = 30
 
 Fade to black = 1
 

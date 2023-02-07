@@ -183,7 +183,7 @@ Do
         color_profile = 1
 
         mode$ = "Julia"
-        parameters_height = 9
+        parameters_height = 10
 
         GoTo Label_explorer_page
     End If
@@ -217,9 +217,9 @@ Do
     End If
 
     'C - See controls
-    'If w$ = "c" Or w$ = "C" and mode$ = "Julia" Then
-    '    Goto Label_controls_page
-    'End If
+    If w$ = "c" Or w$ = "C" and mode$ = "Julia" Then
+        Goto Label_controls_page
+    End If
 
     'Toggle fullscreen (stretched)
     If w$ = "f" Or w$ = "F" Or w$ = Chr$(0) + Chr$(133) Then
@@ -513,6 +513,20 @@ Do
     If w$ = Chr$(0) + Chr$(80) and mode$ = "Julia" Then 'Up arrow - Increase yC
         yC# = yC# + C_step#
         Goto Label_explorer_page
+    End If
+
+    If w$ = Chr$(0) + Chr$(73) Then 'PageUp
+        If C_step# < 0.1 Then
+            C_step# = C_step# * 2
+            Show_parameters 7, 2
+        End If
+    End If
+
+    If w$ = Chr$(0) + Chr$(81) Then 'PageDown
+        If C_step# > 0.00002 Then
+            C_step# = C_step# / 2
+            Show_parameters 7, 2
+        End If
     End If
 
     'Makes sure we can't zoom after zoom 25
@@ -1001,19 +1015,43 @@ Label_controls_page: '____________________________________ Controls page
     Cls
     Presentation
 
-    menu_top_margin = 8
-    menu_left_margin = 20
+    menu_top_margin = 4
+    menu_left_margin = 6
 
-    Locate menu_top_margin, menu_left_margin + 7: Color 15: Print "Controls page"
+    Locate menu_top_margin, menu_left_margin + 30: Color 15: Print "Controls"
 
-    Locate menu_top_margin + 2, menu_left_margin: Color 15: Print "Press    to ---"
-    Locate menu_top_margin + 2, menu_left_margin + 6: Color 2: Print "F1"
+    Locate menu_top_margin + 3, menu_left_margin: Color 15: Print "Press       to target / zoom in"
+    Locate menu_top_margin + 3, menu_left_margin + 6: Color 2: Print "ENTER"
 
-    Locate menu_top_margin + 3, menu_left_margin: Color 15: Print "Press    to ---"
-    Locate menu_top_margin + 3, menu_left_margin + 6: Color 2: Print "F2"
+    Locate menu_top_margin + 4, menu_left_margin: Color 15: Print "Press           to zoom out"
+    Locate menu_top_margin + 4, menu_left_margin + 6: Color 2: Print "BACKSPACE"
 
-    Locate menu_top_margin + 4, menu_left_margin: Color 15: Print "Press    to ---"
-    Locate menu_top_margin + 4, menu_left_margin + 6: Color 4: Print "F3"
+    Locate menu_top_margin + 5, menu_left_margin: Color 15: Print "Press            to aim / change C coord (Julia, when not targetting)"
+    Locate menu_top_margin + 5, menu_left_margin + 6: Color 2: Print "Arrow keys"
+
+    Locate menu_top_margin + 6, menu_left_margin: Color 15: Print "Press              to change targetting step / change C step"
+    Locate menu_top_margin + 6, menu_left_margin + 6: Color 2: Print "PAGE UP/DOWN"
+
+    Locate menu_top_margin + 7, menu_left_margin: Color 15: Print "Press   to save parameters"
+    Locate menu_top_margin + 7, menu_left_margin + 6: Color 2: Print "S"
+
+    Locate menu_top_margin + 8, menu_left_margin: Color 15: Print "Press   to load parameters"
+    Locate menu_top_margin + 8, menu_left_margin + 6: Color 2: Print "L"
+
+    Locate menu_top_margin + 9, menu_left_margin: Color 15: Print "Press   to reset"
+    Locate menu_top_margin + 9, menu_left_margin + 6: Color 2: Print "R"
+
+    Locate menu_top_margin + 10, menu_left_margin: Color 15: Print "Press   to set max parameters"
+    Locate menu_top_margin + 10, menu_left_margin + 6: Color 2: Print "M"
+
+    Locate menu_top_margin + 11, menu_left_margin: Color 15: Print "Press   to create a BMP"
+    Locate menu_top_margin + 11, menu_left_margin + 6: Color 2: Print "B"
+
+    Locate menu_top_margin + 12, menu_left_margin: Color 15: Print "Press   to fullscreen"
+    Locate menu_top_margin + 12, menu_left_margin + 6: Color 2: Print "F"
+
+    Locate menu_top_margin + 13, menu_left_margin: Color 15: Print "Press   to set C coordinates"
+    Locate menu_top_margin + 13, menu_left_margin + 6: Color 2: Print "C"
 
     Locate 26, 20: Color 2: Print "Press any key to return to the main menu"
 

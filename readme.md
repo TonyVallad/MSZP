@@ -27,7 +27,9 @@ The program will create its own folders when needed. (Data, Photos...)
 - Updated BMP creation to support 4k/8k/16k/32k bitmaps!
 - Added color gradient smoothing.
 - Improved the fade in from black or white around the entire sets. (now custumizable from color-settings.txt)
-- Added BMP information when creating it from the explorer. (Mandelbrot)
+- Added BMP information when creating it from the explorer.
+- Added a controls page.
+- Added option to change C coordinates step on Julia explorer. (Page up/down)
 
 ### From V 0.1 to V 0.4:
 - Added program icon and text in title bar.
@@ -118,16 +120,12 @@ It will contain the following parameters :
 
 ### ASAP
 - Fix default parameters display when creating a BMP from explorer.
-- Add info on screen when creating BMP from explorer. (Julia)
-- Add info on options when creating a BMP from explorer. (color settings, resolution...)
-- Complete controls page.
 - Add a preview button based on color profile.
 - Fix video creation. (Julia)
 - Add 'Elapsed time' to video creation.
 - Add a video mode menu. (might not be necesarry)
 - Make it possible to continue video creation by openning log file.
 - Add an offset option for palette system in color-settings.txt.
-- Add option to change C coordinates step on Julia explorer. (now fixed to 0.02)
 - Create different display profiles for 'BMP Creation' function. (right now 
   using 'stealth modes')
 - Make it possible to change zoom amount on targetting screen. (visor size)

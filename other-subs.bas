@@ -25,9 +25,9 @@ End Sub
 
 'Shows the list of keyboard controls
 Sub Show_parameters (y_pos, x_pos)
-    Shared mode$, precision, view_size#, x_coord#, y_coord#, nbzoom, parameters_height, xC#, yC#
+    Shared mode$, precision, view_size#, x_coord#, y_coord#, nbzoom, parameters_height, xC#, yC#, C_step#
 
-    Clear_text y_pos, x_pos, 29 - x_pos, parameters_height
+    Clear_text y_pos, x_pos, 28 - x_pos, parameters_height
 
     zoom = 4 / view_size# '4 = default view_size
 
@@ -52,16 +52,18 @@ Sub Show_parameters (y_pos, x_pos)
         Locate y_pos + 2, x_pos + 4: Color 2: Print RS$(xC#)
         Locate y_pos + 3, x_pos: Color 15: Print "yC:"
         Locate y_pos + 3, x_pos + 4: Color 2: Print RS$(yC#)
-        Locate y_pos + 4, x_pos: Color 15: Print "x:"
-        Locate y_pos + 4, x_pos + 3: Color 2: Print RS$(x_coord#)
-        Locate y_pos + 5, x_pos: Color 15: Print "y:"
-        Locate y_pos + 5, x_pos + 3: Color 2: Print RS$(y_coord#)
-        Locate y_pos + 6, x_pos: Color 15: Print "Max iterations:"
-        Locate y_pos + 6, x_pos + 16: Color 2: Print RS$(precision)
-        Locate y_pos + 7, x_pos: Color 15: Print "Zoom:"
-        Locate y_pos + 7, x_pos + 6: Color 2: Print "x"; RS$(zoom)
-        Locate y_pos + 8, x_pos: Color 15: Print "Zoomed    times."
-        Locate y_pos + 8, x_pos + 7: Color 2: Print RS$(nbzoom)
+        Locate y_pos + 4, x_pos: Color 15: Print "C step:"
+        Locate y_pos + 4, x_pos + 8: Color 2: Print RS$(C_step#)
+        Locate y_pos + 5, x_pos: Color 15: Print "x:"
+        Locate y_pos + 5, x_pos + 3: Color 2: Print RS$(x_coord#)
+        Locate y_pos + 6, x_pos: Color 15: Print "y:"
+        Locate y_pos + 6, x_pos + 3: Color 2: Print RS$(y_coord#)
+        Locate y_pos + 7, x_pos: Color 15: Print "Max iterations:"
+        Locate y_pos + 7, x_pos + 16: Color 2: Print RS$(precision)
+        Locate y_pos + 8, x_pos: Color 15: Print "Zoom:"
+        Locate y_pos + 8, x_pos + 6: Color 2: Print "x"; RS$(zoom)
+        Locate y_pos + 9, x_pos: Color 15: Print "Zoomed    times."
+        Locate y_pos + 9, x_pos + 7: Color 2: Print RS$(nbzoom)
     End If
 End Sub
 
@@ -78,39 +80,21 @@ Sub Show_bmp_information (y_pos, x_pos)
     Locate y_pos + 1, x_pos: Color 8: Print "_________________________"
 
     'Content
-    If mode$ = "Mandelbrot" Then
-        Locate y_pos + 2, x_pos: Color 15: Print "Name:"
-        Locate y_pos + 2, x_pos + 6: Color 2: Print file_name$
-        Locate y_pos + 3, x_pos: Color 15: Print "Max iterations:"
-        Locate y_pos + 3, x_pos + 16: Color 2: Print RS$(precision)
-        Locate y_pos + 4, x_pos: Color 15: Print "Color profile:"
-        Locate y_pos + 4, x_pos + 15: Color 2: Print RS$(color_settings)
-        If color_settings = 1 Then
-            Locate y_pos + 5, x_pos: Color 15: Print "Nb cycles:"
-            Locate y_pos + 5, x_pos + 11: Color 2: Print RS$(cycles_nb#)
-        ElseIf color_settings = 2 Then
-            Locate y_pos + 5, x_pos: Color 15: Print "Cycle length:"
-            Locate y_pos + 5, x_pos + 14: Color 2: Print RS$(cycle_length)
-        End If
-        Locate y_pos + 6, x_pos: Color 15: Print "Resolution:"
-        Locate y_pos + 6, x_pos + 12: Color 2: Print RS$(longueur); "x" ;RS$(hauteur)
-    ElseIf mode$ = "Julia" Then
-        Locate y_pos + 2, x_pos: Color 15: Print "Name:"
-        Locate y_pos + 2, x_pos + 6: Color 2: Print file_name$
-        Locate y_pos + 3, x_pos: Color 15: Print "Max iterations:"
-        Locate y_pos + 3, x_pos + 16: Color 2: Print RS$(precision)
-        Locate y_pos + 4, x_pos: Color 15: Print "Color profile:"
-        Locate y_pos + 4, x_pos + 15: Color 2: Print RS$(color_settings)
-        If color_settings = 1 Then
-            Locate y_pos + 5, x_pos: Color 15: Print "Nb cycles:"
-            Locate y_pos + 5, x_pos + 11: Color 2: Print RS$(cycles_nb#)
-        ElseIf color_settings = 2 Then
-            Locate y_pos + 5, x_pos: Color 15: Print "Cycle length:"
-            Locate y_pos + 5, x_pos + 14: Color 2: Print RS$(cycle_length)
-        End If
-        Locate y_pos + 6, x_pos: Color 15: Print "Resolution:"
-        Locate y_pos + 6, x_pos + 12: Color 2: Print RS$(longueur); "x" ;RS$(hauteur)
+    Locate y_pos + 2, x_pos: Color 15: Print "Name:"
+    Locate y_pos + 2, x_pos + 6: Color 2: Print file_name$
+    Locate y_pos + 3, x_pos: Color 15: Print "Max iterations:"
+    Locate y_pos + 3, x_pos + 16: Color 2: Print RS$(precision)
+    Locate y_pos + 4, x_pos: Color 15: Print "Color profile:"
+    Locate y_pos + 4, x_pos + 15: Color 2: Print RS$(color_settings)
+    If color_settings = 1 Then
+        Locate y_pos + 5, x_pos: Color 15: Print "Nb cycles:"
+        Locate y_pos + 5, x_pos + 11: Color 2: Print RS$(cycles_nb#)
+    ElseIf color_settings = 2 Then
+        Locate y_pos + 5, x_pos: Color 15: Print "Cycle length:"
+        Locate y_pos + 5, x_pos + 14: Color 2: Print RS$(cycle_length)
     End If
+    Locate y_pos + 6, x_pos: Color 15: Print "Resolution:"
+    Locate y_pos + 6, x_pos + 12: Color 2: Print RS$(longueur); "x" ;RS$(hauteur)
 End Sub
 
 'Shows the list of keyboard controls
