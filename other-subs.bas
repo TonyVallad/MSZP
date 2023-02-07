@@ -507,17 +507,24 @@ Sub Load_variables
         mode_path$ = "Data/Julia/"
     End If
 
-    Open mode_path$ + file_name$ + ".txt" For Input As #1
-        Input #1, x_coord#
-        Input #1, y_coord#
-        Input #1, view_size#
-        Input #1, nbzoom
-        Input #1, precision
-        If mode$ = "Julia" Then
-            Input #1, xC#
-            Input #1, yC#
-        End If
-    Close #1
+    If _FILEEXISTS(mode_path$ + file_name$ + ".txt") = -1 Then
+        Open mode_path$ + file_name$ + ".txt" For Input As #1
+            Input #1, x_coord#
+            Input #1, y_coord#
+            Input #1, view_size#
+            Input #1, nbzoom
+            Input #1, precision
+            If mode$ = "Julia" Then
+                Input #1, xC#
+                Input #1, yC#
+            End If
+        Close #1
+    Else
+        'Error message
+        Show_status 2, 2, "File not found!", 4, "", 0
+
+        Exit Sub
+    End If
 
     Explorer_create_image
 End Sub

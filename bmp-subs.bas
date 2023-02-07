@@ -9,6 +9,11 @@ SUB Load_Color_Settings
     'File path
     file_path$ = "color-settings.txt"
 
+    If _FILEEXISTS(file_path$) = 0 Then
+        LOCATE 1, 1: Color 4: PRINT "Missing color-settings.txt file!"
+        Exit Sub
+    End If
+
     'Variables
     start_with$ = ""
     fade_to_black = 0

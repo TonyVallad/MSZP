@@ -129,8 +129,13 @@ Do
         Load_Color_Settings
 
         GoSub Label_BMP_Creator_Page
-        Locate 18, 11: Color 2: Print "Image created, press any key to return to the main menu"
-
+        
+        If file_error = 1 Then
+            LOCATE 1, 1: Color 4: PRINT "File not found!"
+        Else
+            Locate 18, 11: Color 2: Print "Image created, press any key to return to the main menu"
+        End If
+        
         Do
             w$ = InKey$
         Loop Until w$ <> ""
@@ -142,7 +147,12 @@ Do
         mode$ = "Mandelbrot"
        'GoSub Label_Video_Mode_2
         GoSub Label_Video_Mode_1
-        Locate 18, 11: Color 2: Print "Images created, press any key to return to the main menu"
+        
+        If file_error = 1 Then
+            LOCATE 1, 1: Color 4: PRINT "File not found!"
+        Else
+            Locate 18, 11: Color 2: Print "Images created, press any key to return to the main menu"
+        End If
 
         Do
             w$ = InKey$
@@ -195,7 +205,12 @@ Do
         Load_Color_Settings
         
         GoSub Label_BMP_Creator_Page
-        Locate 18, 11: Color 2: Print "Image created, press any key to return to the main menu"
+        
+        If file_error = 1 Then
+            LOCATE 1, 1: Color 4: PRINT "File not found!"
+        Else
+            Locate 18, 11: Color 2: Print "Image created, press any key to return to the main menu"
+        End If
 
         Do
             w$ = InKey$
@@ -208,7 +223,12 @@ Do
        mode$ = "Julia"
        'GoSub Label_Video_Mode_2
         GoSub Label_Video_Mode_1
-        Locate 18, 11: Color 2: Print "Images created, press any key to return to the main menu"
+        
+        If file_error = 1 Then
+            LOCATE 1, 1: Color 4: PRINT "File not found!"
+        Else
+            Locate 18, 11: Color 2: Print "Images created, press any key to return to the main menu"
+        End If
 
         Do
             w$ = InKey$
@@ -673,6 +693,11 @@ Label_BMP_Creator_Page: '___________________________________ BMP Creator
         mode_path$ = "Data/Julia/"
     End If
 
+    If _FILEEXISTS(mode_path$ + file_name$ + ".txt") = 0 Then
+        file_error = 1
+        Return
+    End If
+
     'Load parameters from file
     Open mode_path$ + file_name$ + ".txt" For Input As #1
         Input #1, x_coord#
@@ -781,6 +806,11 @@ Label_Video_Mode_1: '______________________________________ Video Mode 1
     ElseIf mode$ = "Julia" Then
         'Shell "md Data\Julia"
         mode_path$ = "Data/Julia/"
+    End If
+
+    If _FILEEXISTS(mode_path$ + video_name$ + ".txt") = 0 Then
+        file_error = 1
+        Return
     End If
 
     'Loads data from file about target image ("pas" calculated for 200x200 image)
