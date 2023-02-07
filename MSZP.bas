@@ -291,7 +291,7 @@ Do
     End If
 
     'Change C coordinates
-    If w$ = "c" Or w$ = "C" and mode$ = "Julia" Then
+    If (w$ = "c" Or w$ = "C") and mode$ = "Julia" Then
         Update_C
     End If
 

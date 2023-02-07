@@ -13,7 +13,7 @@ The program will create its own folders when needed. (Data, Photos...)
 
 ### New in V 0.5
 - Added Julia sets exploration and updated explorer functions to be compatible.
-- Updated BMP Creation to work with new file paths and both modes. (video mode has yet to be updated)
+- Updated BMP Creation to work with new file paths and both modes. (Julia video mode has yet to be updated)
 - Made it possible to create a BMP image from the explorer by pressing 'B'.
   Resolution choices and color profiles are the same as on the BMP creation page.
 - Created an 'Elapsed time' function. (max 1 date change)
@@ -25,6 +25,9 @@ The program will create its own folders when needed. (Data, Photos...)
   * 2 changes based on length of cycle.
 - Updated version numbers to be more *traditional*
 - Updated BMP creation to support 4k/8k/16k/32k bitmaps!
+- Added color gradient smoothing.
+- Improved the fade in from black or white around the entire sets. (now custumizable from color-settings.txt)
+- Added BMP information when creating it from the explorer. (Mandelbrot)
 
 ### From V 0.1 to V 0.4:
 - Added program icon and text in title bar.
@@ -71,42 +74,39 @@ mostly works now ! (even better than it used to actually...)*
 
 ### When saving parameters
 
-When saving parameters a file is created inside the 'Data' folder with 
-a name of your choosing.
+When saving parameters or creating a BMP from the explorer a file is created inside the folder 'Mandelbrot' or 'Julia' located in the 'Data' folder with the name of your choosing.
 Inside this file you will find the following information:
 - x_coord (center x coordinate)
 - y_coord (center y coordinate)
 - view_size (size of the object of the image inside the set)
 - nb_zoom (number of times you zoomed in to get to that point)
 - max_iterations (max iterations set in explorer at the time of the save)
+- xC (x coordinate of C) (Julia only)
+- yC (y coordinate of C) (Julia only)
 
 ### When creating a BMP image:
 
-When creating BMP files, they will be located inside the "Photos" folder.
+When creating BMP files, they will be located inside the 'Mandelbrot' or 'Julia' folder located inside the 'Images' folder.
 The name of each file will contain the following information:
 - name
 - max iterations (max)
 - color profile (cp)
 - resolution
 
-### When creating a BMP video: (multiple images)
+### When creating a BMP video: (multiple BMP images)
 
 When creating videos, the software will create one image after another.
-It will create a folder located inside the "Videos" folder.
-The name of each folder inside "Videos" will contain the following information:
+It will create a folder inside the 'Mandelbrot' or 'Julia' folder located inside the "Videos" folder.
+The name of each folder inside this folder will contain the following information:
 - name
 - video mode (vm)
 - color profile (cp)
 
-Then the software will create a series of BMP files inside the folder created
-specifically for the video.
+Then the software will create a series of BMP files inside the folder created specifically for the video.
 
-Warning: Unlike when creating a single image (where choosing a different resolution
-creates a different file), in video mode it will overwrite any existing files.
+Warning: Unlike when creating a single image (where choosing a different resolution, color profile or max iterations creates a different file), in video mode it will overwrite any existing files.
 
-A log file called "data.txt" will be created in the same folder as the images if
-you wish to get the parameters to continue the video making process in case of any
-interuption. (or any other reason)
+A log file called "data.txt" will be created in the same folder as the images if you wish to get the parameters to continue the video making process in case of any interuption. (or any other reason)
 It will contain the following parameters :
 - max_iterations_start
 - max_iterations_end
@@ -118,15 +118,15 @@ It will contain the following parameters :
 
 ### ASAP
 - Fix default parameters display when creating a BMP from explorer.
-- Add info on screen when creating BMP from explorer.
-- Add info on options when creating a BMP from explorer.
+- Add info on screen when creating BMP from explorer. (Julia)
+- Add info on options when creating a BMP from explorer. (color settings, resolution...)
 - Complete controls page.
 - Add a preview button based on color profile.
-- Fix video creation.
+- Fix video creation. (Julia)
 - Add 'Elapsed time' to video creation.
-- Add a video mode menu.
+- Add a video mode menu. (might not be necesarry)
 - Make it possible to continue video creation by openning log file.
-- Make a color palette based on default but offset a little bit.
+- Add an offset option for palette system in color-settings.txt.
 - Add option to change C coordinates step on Julia explorer. (now fixed to 0.02)
 - Create different display profiles for 'BMP Creation' function. (right now 
   using 'stealth modes')
@@ -135,16 +135,11 @@ It will contain the following parameters :
 - Use _FLOAT variables to be able to zoom in further. (possibly?)
 
 ### Later
-- Smooth out the contours between colors for bitmap.
-  See: https://www.karlsims.com/julia.html (bottom of the page)
 - Try to make it more efficient if possible.
 - Add the option to enter coordinates ? (not sure about that one...)
-- Make BMPs videos from the explorer.
-- Make the explorer page the default one and remove the main menu. (once
-  step above is made)
+- Make BMPs videos from the explorer. (maybe not...)
 - Add an 'About' section to talk a little bit about why I finished it so late 
   and why I even bothered. xD
-
 
 ## Notes
 

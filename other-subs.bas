@@ -94,25 +94,22 @@ Sub Show_bmp_information (y_pos, x_pos)
         End If
         Locate y_pos + 6, x_pos: Color 15: Print "Resolution:"
         Locate y_pos + 6, x_pos + 12: Color 2: Print RS$(longueur); "x" ;RS$(hauteur)
-        'Locate y_pos + 6, x_pos: Color 15: Print "Zoom:"
-        'Locate y_pos + 6, x_pos + 6: Color 2: Print "x"; RS$(zoom)
-        'Locate y_pos + 7, x_pos: Color 15: Print "Zoomed    times."
-        'Locate y_pos + 7, x_pos + 7: Color 2: Print RS$(nbzoom)
     ElseIf mode$ = "Julia" Then
-        Locate y_pos + 2, x_pos: Color 15: Print "xC:"
-        Locate y_pos + 2, x_pos + 4: Color 2: Print RS$(xC#)
-        Locate y_pos + 3, x_pos: Color 15: Print "yC:"
-        Locate y_pos + 3, x_pos + 4: Color 2: Print RS$(yC#)
-        Locate y_pos + 4, x_pos: Color 15: Print "x:"
-        Locate y_pos + 4, x_pos + 3: Color 2: Print RS$(x_coord#)
-        Locate y_pos + 5, x_pos: Color 15: Print "y:"
-        Locate y_pos + 5, x_pos + 3: Color 2: Print RS$(y_coord#)
-        Locate y_pos + 6, x_pos: Color 15: Print "Max iterations:"
-        Locate y_pos + 6, x_pos + 16: Color 2: Print RS$(precision)
-        Locate y_pos + 7, x_pos: Color 15: Print "Zoom:"
-        Locate y_pos + 7, x_pos + 6: Color 2: Print "x"; RS$(zoom)
-        Locate y_pos + 8, x_pos: Color 15: Print "Zoomed    times."
-        Locate y_pos + 8, x_pos + 7: Color 2: Print RS$(nbzoom)
+        Locate y_pos + 2, x_pos: Color 15: Print "Name:"
+        Locate y_pos + 2, x_pos + 6: Color 2: Print file_name$
+        Locate y_pos + 3, x_pos: Color 15: Print "Max iterations:"
+        Locate y_pos + 3, x_pos + 16: Color 2: Print RS$(precision)
+        Locate y_pos + 4, x_pos: Color 15: Print "Color profile:"
+        Locate y_pos + 4, x_pos + 15: Color 2: Print RS$(color_settings)
+        If color_settings = 1 Then
+            Locate y_pos + 5, x_pos: Color 15: Print "Nb cycles:"
+            Locate y_pos + 5, x_pos + 11: Color 2: Print RS$(cycles_nb#)
+        ElseIf color_settings = 2 Then
+            Locate y_pos + 5, x_pos: Color 15: Print "Cycle length:"
+            Locate y_pos + 5, x_pos + 14: Color 2: Print RS$(cycle_length)
+        End If
+        Locate y_pos + 6, x_pos: Color 15: Print "Resolution:"
+        Locate y_pos + 6, x_pos + 12: Color 2: Print RS$(longueur); "x" ;RS$(hauteur)
     End If
 End Sub
 

@@ -202,7 +202,6 @@ Sub Get_pixel_color_BMP ()
         End If
 
         'Fade to black
-        'fade_to_black = 1 'Forced "on" for testing
         If fade_to_black = 1 Then
             If precision >= cycle_length Then
                 If C > (precision - (0.5 * color_length)) Then 'To fix
