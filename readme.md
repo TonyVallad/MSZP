@@ -1,9 +1,9 @@
 
-# Mandelbrot Set Zoomer Program - Version 0.5 - Alpha
+# Mandelbrot Set Zoomer Program - Version 0.5.0 - Alpha
 
 ## Installation
 
-Note: To download .exe I will create a release as soon as I understand how it works ;)
+Download from here: [windows download] (https://github.com/TonyVallad/MSZP/releases/download/v0.5.0-alpha/MSZP-2023-0.5.0-alpha.zip)
 
 1. Extract the content of the .zip file to a new folder.
 2. Run MSZP.exe
@@ -13,7 +13,7 @@ The program will create its own folders when needed. (Data, Photos...)
 
 ## Changelog
 
-### New in V 0.5
+### New in V 0.5.0
 - Added Julia sets exploration and updated explorer functions to be compatible.
 - Updated BMP Creation to work with new file paths and both modes. (Julia video mode has yet to be updated)
 - Made it possible to create a BMP image from the explorer by pressing 'B'.
@@ -34,7 +34,7 @@ The program will create its own folders when needed. (Data, Photos...)
 - Added option to change C coordinates step on Julia explorer. (Page up/down)
 - Added an error message if file is not found.
 
-### From V 0.1 to V 0.4:
+### From V 0.1.0 to V 0.4.0:
 - Added program icon and text in title bar.
 - Modified the code to display the y axis correctly. (used to be inverted because y coordinates are inverted in SCREEN 12 in QBasic...)
   Wasn't much of a problem since the set is symetric vertically but the coordinates were negative upwards which bothered me and could be confusing!
