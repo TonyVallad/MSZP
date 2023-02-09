@@ -3,13 +3,12 @@
 
 ## Installation
 
-Download from here: [windows download] (https://github.com/TonyVallad/MSZP/releases/download/v0.5.0-alpha/MSZP-2023-0.5.0-alpha.zip)
+Download from here: [Windows download](https://github.com/TonyVallad/MSZP/releases/download/v0.5.0-alpha/MSZP-2023-0.5.0-alpha.zip)
 
 1. Extract the content of the .zip file to a new folder.
 2. Run MSZP.exe
 
 The program will create its own folders when needed. (Data, Photos...)
-
 
 ## Changelog
 
