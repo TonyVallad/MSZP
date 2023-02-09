@@ -6,8 +6,8 @@
 Sub Presentation
     Locate 30, 2: Color 15: Print "Created by:";
     Locate 30, 14: Color 2: Print "Anthony Vallad";
-    Locate 30, 61: Color 15: Print "V.";
-    Locate 30, 61: Color 1: Print "2023 - V0.5 - Alpha";
+    Locate 30, 56: Color 15: Print "V.";
+    Locate 30, 59: Color 1: Print "2023 - V0.5.0 - Alpha";
 End Sub
 
 'Clears area to black

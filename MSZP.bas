@@ -28,7 +28,7 @@ DECLARE SUB Load_variables ()
 DECLARE SUB Update_C ()
 
 'Text inside software title bar
-_Title "Mandelbrot Set Zoomer Program - 2023 - V0.5 - Alpha"
+_Title "Mandelbrot Set Zoomer Program - 2023 - V0.5.0 - Alpha"
 
 'Program icon - Must be in QB64 install folder (for some reason...)
 $ExeIcon:'set.ico'
