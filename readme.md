@@ -3,6 +3,8 @@
 
 ## Installation
 
+Note: To download .exe I will create a release as soon as I understand how it works ;)
+
 1. Extract the content of the .zip file to a new folder.
 2. Run MSZP.exe
 
@@ -30,6 +32,7 @@ The program will create its own folders when needed. (Data, Photos...)
 - Added BMP information when creating it from the explorer.
 - Added a controls page.
 - Added option to change C coordinates step on Julia explorer. (Page up/down)
+- Added an error message if file is not found.
 
 ### From V 0.1 to V 0.4:
 - Added program icon and text in title bar.
@@ -119,7 +122,10 @@ It will contain the following parameters :
 ## Todo list
 
 ### ASAP
-- Fix default parameters display when creating a BMP from explorer.
+
+- Look into creating PNGs instead of BMPs. (size matters! xD)
+- Make it possible to drag and drop a data file onto the .exe to auto-start BMP creation.
+- Fix default parameters display when creating a BMPs from explorer.
 - Add a preview button based on color profile.
 - Fix video creation. (Julia)
 - Add 'Elapsed time' to video creation.
@@ -133,15 +139,13 @@ It will contain the following parameters :
 - Use _FLOAT variables to be able to zoom in further. (possibly?)
 
 ### Later
-- Try to make it more efficient if possible.
+
 - Add the option to enter coordinates ? (not sure about that one...)
 - Make BMPs videos from the explorer. (maybe not...)
 - Add an 'About' section to talk a little bit about why I finished it so late 
   and why I even bothered. xD
 
 ## Notes
-
-EXE compiled using QB64 x64 Version 2.1
 
 Disclaimer: Since this program is written in QBasic it can only use 1 CPU Thread to make calculations. (as far as I know...) 
 I'm only working on it because this was my first software and it has sentimental value to me.

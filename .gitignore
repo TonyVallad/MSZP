@@ -7,9 +7,7 @@ MSZP.code-workspace
 *.exe
 *.bas-bak
 
-.Data/
 Data/*
-.Images/
 Images/*
 Videos/*
 Related/*
