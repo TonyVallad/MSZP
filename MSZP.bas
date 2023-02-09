@@ -362,28 +362,32 @@ Do
             End If
         Loop Until w$ <> ""
         
-
         If color_settings = 1 Then
             Show_status 2, 2, "Number of cycles:", 15, "By default: 1", 7
             Locate 5, 2: Color 2: Input user_input$
+
             cycles_nb# = VAL(user_input$)
+
             If cycles_nb# <= 0 or cycles_nb# > 10000 Then
                 cycles_nb# = 1
                 cycle_length = int(precision / cycles_nb#)
             Else
                 cycle_length = int(precision / cycles_nb#)
             End If
+
+            full_file_name$ = file_name$ + " - " + RS$(precision) + "max - cp" + RS$(color_settings) + "."+ RS$(cycles_nb#) + " - " + RS$(longueur) + "x" + RS$(hauteur) + ".bmp"
         Elseif color_settings = 2 Then
             Show_status 2, 2, "Cycle length:", 15, "By default: " + RS$(precision), 7
             Locate 5, 2: Color 2: Input user_input$
+
             cycle_length = VAL(user_input$)
+
             If cycle_length <= 2 or cycle_length > 1000000 Then
                cycle_length = precision
             End If
-        End If
 
-        'Load color settings
-        Load_Color_Settings
+            full_file_name$ = file_name$ + " - " + RS$(precision) + "max - cp" + RS$(color_settings) + "."+ RS$(cycle_length) + " - " + RS$(longueur) + "x" + RS$(hauteur) + ".bmp"
+        End If
 
         'Resolution selection
         Show_status 2, 2, "Select resolution", 15, "Press F1 - F8", 14
@@ -436,8 +440,15 @@ Do
             End If
         Loop Until longueur > 0
 
-        
-        full_file_name$ = file_name$ + " - " + RS$(precision) + "max - cp" + RS$(color_settings) + " - " + RS$(longueur) + "x" + RS$(hauteur) + ".bmp"
+        If color_settings = 1 Then
+            full_file_name$ = file_name$ + " - " + RS$(precision) + "max - cp" + RS$(color_settings) + "."+ RS$(cycles_nb#) + " - " + RS$(longueur) + "x" + RS$(hauteur) + ".bmp"
+        Elseif color_settings = 2 Then
+            full_file_name$ = file_name$ + " - " + RS$(precision) + "max - cp" + RS$(color_settings) + "."+ RS$(cycle_length) + " - " + RS$(longueur) + "x" + RS$(hauteur) + ".bmp"
+        End If
+
+        'Load color settings
+        Load_Color_Settings
+
         file_path$ = mode_path$ + full_file_name$
 
         time_start = TIMER
@@ -766,7 +777,12 @@ Label_BMP_Creator_Page: '___________________________________ BMP Creator
         mode_path$ = "Images/Julia/"
     End If
 
-    full_file_name$ = file_name$ + " - " + RS$(precision) + "max - cp" + RS$(color_settings) + " - " + RS$(longueur) + "x" + RS$(hauteur) + ".bmp"
+    If color_settings = 1 Then
+        full_file_name$ = file_name$ + " - " + RS$(precision) + "max - cp" + RS$(color_settings) + "."+ RS$(cycles_nb#) + " - " + RS$(longueur) + "x" + RS$(hauteur) + ".bmp"
+    Elseif color_settings = 2 Then
+        full_file_name$ = file_name$ + " - " + RS$(precision) + "max - cp" + RS$(color_settings) + "."+ RS$(cycle_length) + " - " + RS$(longueur) + "x" + RS$(hauteur) + ".bmp"
+    End If
+    
     file_path$ = mode_path$ + full_file_name$
 
     time_start = TIMER
