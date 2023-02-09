@@ -1,5 +1,5 @@
 
-# Readme - Mandelbrot Set Zoomer Program - Version 0.5 - Alpha
+# Mandelbrot Set Zoomer Program - Version 0.5 - Alpha
 
 ## Installation
 
