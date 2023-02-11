@@ -1,5 +1,5 @@
 
-# Mandelbrot Set Zoomer Program - V 0.5.0 - Alpha
+# Mandelbrot Set Zoomer Program - V 0.5.1 - Alpha
 
 ## Installation
 
@@ -10,9 +10,9 @@ Download from here: [Windows download](https://github.com/TonyVallad/MSZP/releas
 
 The program will create its own folders when needed. (Data, Photos...)
 
-<img src="https://pbs.twimg.com/media/FofpuY3WAAEx78s?format=png&name=small" width="500"/>
+<img src="https://pbs.twimg.com/media/FofpuY3WAAEx78s?format=png&name=small"/>
 
-<img src="https://pbs.twimg.com/media/FofrRy3XwAEDpiP?format=jpg&name=4096x4096" width="500"/>
+<img src="https://pbs.twimg.com/media/FofrRy3XwAEDpiP?format=jpg&name=4096x4096"/>
 
 ## Changelog
 
