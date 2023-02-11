@@ -1,5 +1,5 @@
 
-# Mandelbrot Set Zoomer Program - Version 0.5.0 - Alpha
+# Mandelbrot Set Zoomer Program - V 0.5.0 - Alpha
 
 ## Installation
 
@@ -16,6 +16,11 @@ The program will create its own folders when needed. (Data, Photos...)
 
 ## Changelog
 
+### New in V 0.5.1
+- It's now possible to resize the window.
+- It's now possible to drag and drop data files.
+- Added the missing menu option to go to controls page.
+
 ### New in V 0.5.0
 - Added Julia sets exploration and updated explorer functions to be compatible.
 - Updated BMP Creation to work with new file paths and both modes. (Julia video mode has yet to be updated)
@@ -23,7 +28,9 @@ The program will create its own folders when needed. (Data, Photos...)
   Resolution choices and color profiles are the same as on the BMP creation page.
 - Created an 'Elapsed time' function. (max 1 date change)
 - Added a visual indicator of visor step size for targetting mode. (small white square in the center of the visor)
-- Made it possible to increment C coordinates from explorer. (use arrow keys when not in targetting mode) (Julia only of course) [step fixed at 0.02 for now]
+- Made it possible to increment C coordinates from explorer. (Julia only of course)
+    * Use arrow keys when not in targetting mode.
+    * Use Page up/down to change C coordinates step.
 - Created a new color palette system along with a 'color-settings.txt' file to be able to edit palette and other settings. (loaded at the beginning of every BMP creation)
 - Color profiles 1 & 2 are now using color palette.
   * 1 changes based on number of cycles to max iterations.
@@ -34,7 +41,6 @@ The program will create its own folders when needed. (Data, Photos...)
 - Improved the fade in from black or white around the entire sets. (now custumizable from color-settings.txt)
 - Added BMP information when creating it from the explorer.
 - Added a controls page.
-- Added option to change C coordinates step on Julia explorer. (Page up/down)
 - Added an error message if file is not found.
 - Updated image filename to have cycles number or length depending on color profile.
 
@@ -44,7 +50,6 @@ The program will create its own folders when needed. (Data, Photos...)
   Wasn't much of a problem since the set is symetric vertically but the coordinates were negative upwards which bothered me and could be confusing!
 - Blocked zooming after zoom level 25 because the image would get messed up after that. Would be even worse when creating a BMP.
 - Added a 'Reset' command. (Press 'R')
-- Updated the controls menu.
 - Tried my best to use center of image coordinates + size of visible area instead of the old 'debutx', 'debuty' and 'pas' variables.
   They were annoying to work with and not instinctive.
 - Made an array for the image inside the viewer (explorer), so as to correct incompatible old GPU commands, making the visor work properly again. (and facilitating color profile switching)
@@ -69,7 +74,7 @@ The program will create its own folders when needed. (Data, Photos...)
 - Created a 'Progress_bar' SUB and replaced existing ones.
   + added a new one for the explorer so we can clearly see where it's at.
   + added one showing the total progress of a video creation. (nb images)
-- Made it so pressing 'Esc' while in targetting mode exits targetting mode.
+- Made it so pressing 'Esc' or 'Backspace' while in targetting mode exits targetting mode.
 - Enable fine tuning for visor. (use 'PageUp' and 'PageDown' to adjust visor step distance)
     - 20 px (default)
     - 10 px
@@ -99,7 +104,7 @@ When creating BMP files, they will be located inside the 'Mandelbrot' or 'Julia'
 The name of each file will contain the following information:
 - name
 - max iterations (max)
-- color profile (cp)
+- color profile (cp) followed by '.' and either the number of cycles (color profile 1) or the cycle length (color profile 2)
 - resolution
 
 ### When creating a BMP video: (multiple BMP images)
@@ -127,12 +132,13 @@ It will contain the following parameters :
 
 ### ASAP
 
-- Add log-log to color profile 2.
+- Add missing information in data file. (log)
+- Add log-log (color gradient smoothing) to color profile 2.
 - Look into creating PNGs instead of BMPs. (size matters! xD)
-- Make it possible to drag and drop a data file onto the .exe to auto-start BMP creation.
+- Make it possible to drag and drop a data file onto the .exe to auto-start BMP creation for images. (works for videos)
 - Fix default parameters display when creating a BMPs from explorer.
 - Add a preview button based on color profile.
-- Fix video creation. (Julia)
+- Fix video creation for Julia.
 - Add 'Elapsed time' to video creation.
 - Add a video mode menu. (might not be necesarry)
 - Make it possible to continue video creation by openning log file.
