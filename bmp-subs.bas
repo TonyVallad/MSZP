@@ -489,8 +489,8 @@ Sub BMP_Creator
             Locate 10, 45: Color 14: Print RS$(yC#)
         End If
 
-        Locate 12, 11: Color 15: Print "File name:"
-        Locate 12, 22: Color 14: Print full_file_name$
+        Locate 11, 11: Color 15: Print "File name:"
+        Locate 12, 11: Color 14: Print full_file_name$
         Locate 13, 11: Color 15: Print "Resolution:"
         Locate 13, 23: Color 14: Print RS$(longueur); "x"; RS$(hauteur)
         Locate 14, 11: Color 15: Print "Color settings:"

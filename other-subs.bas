@@ -7,7 +7,7 @@ Sub Presentation
     Locate 30, 2: Color 15: Print "Created by:";
     Locate 30, 14: Color 2: Print "Anthony Vallad";
     Locate 30, 56: Color 15: Print "V.";
-    Locate 30, 59: Color 1: Print "2023 - V0.5.0 - Alpha";
+    Locate 30, 59: Color 1: Print "2023 - V0.5.1 - Alpha";
 End Sub
 
 'Clears area to black
@@ -530,15 +530,192 @@ Sub Load_variables
 End Sub
 
 'Save log for bmp creation
-Sub Save_log (full_folder_path$)
-    Shared precision_min, precision_max, longueur, hauteur, color_settings, ni
-    log_file_path$ = full_folder_path$ + "/data.txt" 'called log file "data.txt" so it shows up on top of the images and not below
+Sub Save_log (full_folder_path$, start_from_image_nb)
+    Shared video_name$, mode$, x_coord_end#, y_coord_end#, view_size_end#, xC_start#, xC_end#, yC_start#, yC_end#, precision_min, precision_max, longueur, hauteur, color_settings, cycles_nb#, cycle_length, video_mode, ni
+    Shared file_name$, x_coord#, y_coord#, view_size#, precision, xC#, yC# 'Image specific
+    
+    If video_name$ <> "" Then 'Video
+        log_file_path$ = full_folder_path$ + "/data.txt"
+    ElseIf file_name$ <> "" Then 'Image
+        If color_settings = 1 Then
+            log_file_path$ = full_folder_path$ + file_name$ + " - " + RS$(precision) + "max - cp" + RS$(color_settings) + "."+ RS$(cycles_nb#) + " - " + RS$(longueur) + "x" + RS$(hauteur) + ".txt"
+        Elseif color_settings = 2 Then
+            log_file_path$ = full_folder_path$ + file_name$ + " - " + RS$(precision) + "max - cp" + RS$(color_settings) + "."+ RS$(cycle_length) + " - " + RS$(longueur) + "x" + RS$(hauteur) + ".txt"
+        End If
+    End If
 
     Open log_file_path$ For Output As #1
-        Print #1, "max_iterations_start: "; precision_min
-        Print #1, "max_iterations_end: "; precision_max
-        Print #1, "resolution: "; longueur; "x"; hauteur
-        Print #1, "color_settings: "; color_settings
-        Print #1, "Number of images: "; ni
+        If ni > 1 Then 'Video specific
+            Print #1, "Video name:              "; video_name$
+            Print #1, "x:                       "; RS$(x_coord_end#)
+            Print #1, "y:                       "; RS$(y_coord_end#)
+            Print #1, "Size:                    "; RS$(view_size_end#)
+            Print #1, "max_iterations_start:    "; RS$(precision_min)
+            Print #1, "max_iterations_end:      "; RS$(precision_max)
+            Print #1, "Video mode:              "; RS$(video_mode)
+        Else 'Image specific
+            Print #1, "Image name:              "; file_name$
+            Print #1, "x:                       "; RS$(x_coord#)
+            Print #1, "y:                       "; RS$(y_coord#)
+            Print #1, "Size:                    "; RS$(view_size#)
+            Print #1, "max_iterations:          "; RS$(precision)
+        End If
+        
+        Print #1, "Mode:                    "; mode$
+        
+        If mode$ = "Julia" Then 'Julia specific
+            If ni > 1 Then 'Video specific
+                Print #1, "xC_start:                "; RS$(xC_start#)
+                Print #1, "xC_end:                  "; RS$(xC_end#)
+                Print #1, "yC_start:                "; RS$(yC_start#)
+                Print #1, "yC_end:                  "; RS$(yC_end#)
+            Else
+                Print #1, "xC:                      "; RS$(xC#)
+                Print #1, "yC:                      "; RS$(yC#)
+            End If
+        End If
+        
+        Print #1, "Resolution:              "; RS$(longueur); "x"; RS$(hauteur)
+        Print #1, "color_settings:          "; RS$(color_settings)
+
+        If color_settings = 1 Then
+            Print #1, "Number of cycles:        "; RS$(cycles_nb#)
+        Elseif color_settings = 2 Then
+            Print #1, "Length of cycle:         "; RS$(cycle_length)
+        End If
+
+        Print #1, "Number of images:        "; RS$(ni)
+
+        If ni > 1 Then 'Video specific
+            Print #1, "Start from image nb:     "; RS$(start_from_image_nb)
+        End If
+    Close #1
+End Sub
+
+Sub Load_dragged_file (dragged_file_path$)
+    Shared video_name$, mode$, x_coord_end#, y_coord_end#, view_size_end#, precision_min, precision_max, longueur, hauteur, color_settings, cycles_nb#, cycle_length, video_mode, ni, first_image_nb
+    Shared file_name$, x_coord#, y_coord#, view_size#, precision, xC#, yC# 'Image specific
+
+    'Open file
+    OPEN dragged_file_path$ FOR INPUT AS #1
+        'Parse lines
+        DO UNTIL EOF(1)
+            'Input #1, current_line$
+            Line Input #1, current_line$
+
+            'Video Name
+            IF LEFT$(current_line$, 11) = "Video name:" THEN
+                video_name$ = MID$(current_line$, 26)
+            END IF
+
+            'Image Name
+            IF LEFT$(current_line$, 11) = "Image name:" THEN
+                file_name$ = MID$(current_line$, 26)
+            END IF
+
+            'Mode
+            IF LEFT$(current_line$, 5) = "Mode:" THEN
+                mode$ = MID$(current_line$, 26)
+            END IF
+
+            'Video specific
+            If video_name$ <> "" Then
+                'X - Video
+                IF LEFT$(current_line$, 2) = "x:" THEN
+                    x_coord_end# = VAL(MID$(current_line$, 26))
+                END IF
+
+                'Y - Video
+                IF LEFT$(current_line$, 2) = "y:" THEN
+                    y_coord_end# = VAL(MID$(current_line$, 26))
+                END IF
+
+                'Size - Video
+                IF LEFT$(current_line$, 5) = "Size:" THEN
+                    view_size_end# = VAL(MID$(current_line$, 26))
+                END IF
+
+                'Max iterations - start
+                IF LEFT$(current_line$, 21) = "max_iterations_start:" THEN
+                    precision_min = VAL(MID$(current_line$, 26))
+                END IF
+
+                'Max iterations - end
+                IF LEFT$(current_line$, 19) = "max_iterations_end:" THEN
+                    precision_max = VAL(MID$(current_line$, 26))
+                END IF
+            End If
+
+            'Image specific
+            If file_name$ <> "" Then
+                'X - Image
+                IF LEFT$(current_line$, 2) = "x:" THEN
+                    x_coord# = VAL(MID$(current_line$, 26))
+                END IF
+
+                'Y - Image
+                IF LEFT$(current_line$, 2) = "y:" THEN
+                    y_coord# = VAL(MID$(current_line$, 26))
+                END IF
+
+                'Size - Image
+                IF LEFT$(current_line$, 5) = "Size:" THEN
+                    view_size# = VAL(MID$(current_line$, 26))
+                END IF
+
+                'Max iterations - Image
+                IF LEFT$(current_line$, 15) = "max_iterations:" THEN
+                    precision = VAL(MID$(current_line$, 26))
+                END IF
+
+                'xC - Image
+                IF LEFT$(current_line$, 3) = "xC:" THEN
+                    xC# = VAL(MID$(current_line$, 26))
+                END IF
+
+                'yC - Image
+                IF LEFT$(current_line$, 3) = "yC:" THEN
+                    yC# = VAL(MID$(current_line$, 26))
+                END IF
+            End If
+
+            'Resolution
+            IF LEFT$(current_line$, 11) = "Resolution:" THEN
+                resolution$ = MID$(current_line$, 26)
+                separation_pos = INSTR(1, resolution$, "x")
+                longueur = VAL(LEFT$(resolution$, separation_pos - 1))
+                hauteur = VAL(RIGHT$(resolution$, LEN(resolution$) - separation_pos))
+            END IF
+
+            'Color settings
+            IF LEFT$(current_line$, 15) = "color_settings:" THEN
+                color_settings = VAL(MID$(current_line$, 26))
+            END IF
+
+            'Cycles nb
+            IF LEFT$(current_line$, 17) = "Number of cycles:" THEN
+                cycles_nb# = VAL(MID$(current_line$, 26))
+            END IF
+
+            'Cycle length
+            IF LEFT$(current_line$, 16) = "Length of cycle:" THEN
+                cycle_length = VAL(MID$(current_line$, 26))
+            END IF
+
+            'Video mode
+            IF LEFT$(current_line$, 11) = "Video mode:" THEN
+                video_mode = VAL(MID$(current_line$, 26))
+            END IF
+
+            'Number of images
+            IF LEFT$(current_line$, 17) = "Number of images:" THEN
+                ni = VAL(MID$(current_line$, 26))
+            END IF
+
+            'Start with image number
+            IF LEFT$(current_line$, 20) = "Start from image nb:" THEN
+                first_image_nb = VAL(MID$(current_line$, 26))
+            END IF
+        LOOP
     Close #1
 End Sub

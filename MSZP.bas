@@ -3,6 +3,7 @@
 '-----------------------------------------------------------------------
 
 DECLARE SUB Load_Color_Settings ()
+DECLARE SUB Load_dragged_file ()
 DECLARE SUB Presentation ()
 DECLARE SUB Clear_text ()
 DECLARE SUB Show_parameters ()
@@ -28,10 +29,13 @@ DECLARE SUB Load_variables ()
 DECLARE SUB Update_C ()
 
 'Text inside software title bar
-_Title "Mandelbrot Set Zoomer Program - 2023 - V0.5.0 - Alpha"
+_Title "Mandelbrot Set Zoomer Program - 2023 - V0.5.1 - Alpha"
 
-'Program icon - Must be in QB64 install folder (for some reason...)
-$ExeIcon:'set.ico'
+'Program icon
+$ExeIcon:'./set.ico'
+
+'Resize window
+$Resize:Stretch
 
 'Sets up graphics display of 640x480 pixels and a color depth of 16 colors
 Screen 12
@@ -58,6 +62,38 @@ f = 1
 precision_default = 250
 C_step# = 0.02 'Default C step
 Display_crosshair = 1 'To toggle crosshair display
+
+'Loads dragged file
+dragged_file_path$ = Command$
+If dragged_file_path$ <> "" Then
+    'Load dragged file
+    Load_dragged_file (dragged_file_path$)
+
+    'Goto create video/image
+    If ni > 1 Then
+        GoSub Label_Video_Mode_1
+        
+        Locate 18, 11: Color 2: Print "Images created, press any key to return to the main menu"
+
+        Do
+            w$ = InKey$
+        Loop Until w$ <> ""
+    ElseIf ni = 1 Then
+        GoSub Label_BMP_Creator_Page
+
+        Locate 18, 11: Color 2: Print "Image created, press any key to return to the main menu"
+
+        Do
+            w$ = InKey$
+        Loop Until w$ <> ""
+    End If
+
+    Do
+        w$ = InKey$
+    Loop Until w$ <> ""
+
+    dragged_file_path$ = ""
+End If
 
 Cls
 Presentation
@@ -90,6 +126,9 @@ Locate julia_menu_height + 3, 31: Color 2: Print "F6"
 
 Locate julia_menu_height + 4, 25: Color 15: Print "Press    to create BMP video"
 Locate julia_menu_height + 4, 31: Color 4: Print "F7"
+
+Locate julia_menu_height + 7, 28: Color 15: Print "Press   to see controls"
+Locate julia_menu_height + 7, 34: Color 14: Print "C"
 
 'Listen to keyboard and take action
 Do
@@ -457,7 +496,10 @@ Do
         BMP_creator_stealth = 1
 
         'Saves Data file
-        Save_variables file_name$, x_coord#, y_coord#, view_size#, nbzoom, precision
+        'Save_variables file_name$, x_coord#, y_coord#, view_size#, nbzoom, precision
+
+        'Saves log file
+        Save_log mode_path$, 1
 
         'Show information box
         Show_bmp_information parameters_height + 8, 2
@@ -600,19 +642,11 @@ Label_targetting: '__________________________________________ Targetting
             GoTo Label_explorer_page
         End If
 
-        'Backspace - Zoom out
+        'Backspace - Gets out of targetting mode
         If w$ = Chr$(8) Then
-            If nbzoom > 1 Then
-                view_size# = (view_size# / 120) * explorer_height
-                nbzoom = nbzoom - 1
-                GoTo Label_explorer_page
-            ElseIf nbzoom = 1 Then
-                x_coord# = 0
-                y_coord# = 0
-                view_size# = 4
-                nbzoom = nbzoom - 1
-                GoTo Label_explorer_page
-            End If
+            'Reloads explorer
+            Reload_explorer
+            GoTo Label_explorer_controls
         End If
 
         'Save parameters
@@ -691,81 +725,87 @@ Return
 Label_BMP_Creator_Page: '___________________________________ BMP Creator
     Cls
     Presentation
-    Locate 14, 20: Color 15: Print "Image Name: "
-    Locate 15, 20: Color 2: Print "This will be the name of the BMP file"
-    Locate 14, 32: Color 2: Input file_name$ 'No more 8 character limit with QB64
 
-    'Path selection
-    If mode$ = "Mandelbrot" Then
-        'Shell "md Data\Mandelbrot"
-        mode_path$ = "Data/Mandelbrot/"
-    ElseIf mode$ = "Julia" Then
-        'Shell "md Data\Julia"
-        mode_path$ = "Data/Julia/"
-    End If
+    'Parameters imput
+    If dragged_file_path$ = "" Then
+        Locate 14, 20: Color 15: Print "Image Name: "
+        Locate 15, 20: Color 2: Print "This will be the name of the BMP file"
+        Locate 14, 32: Color 2: Input file_name$
 
-    If _FILEEXISTS(mode_path$ + file_name$ + ".txt") = 0 Then
-        file_error = 1
-        Return
-    End If
-
-    'Load parameters from file
-    Open mode_path$ + file_name$ + ".txt" For Input As #1
-        Input #1, x_coord#
-        Input #1, y_coord#
-        Input #1, view_size#
-        Input #1, nbzoom
-        Input #1, precision_default
-        If mode$ = "Julia" Then
-            Input #1, xC#
-            Input #1, yC#
+        'Path selection
+        If mode$ = "Mandelbrot" Then
+            mode_path$ = "Data/Mandelbrot/"
+        ElseIf mode$ = "Julia" Then
+            mode_path$ = "Data/Julia/"
         End If
-    Close #1
 
-    Cls
-    Presentation
-    Locate 14, 20: Color 15: Print "Max iterations: "
-    Locate 15, 20: Color 14: Print "By default:"; Str$(precision_default)
-    Locate 14, 36: Color 2: Input precision
-    If precision < 2 Then
-        precision = precision_default
-    End If
+        If _FILEEXISTS(mode_path$ + file_name$ + ".txt") = 0 Then
+            file_error = 1
+            Return
+        End If
 
-    'Color settings selection
-    BMP_color_profile_select
+        'Load parameters from file
+        Open mode_path$ + file_name$ + ".txt" For Input As #1
+            Input #1, x_coord#
+            Input #1, y_coord#
+            Input #1, view_size#
+            Input #1, nbzoom
+            Input #1, precision_default
+            If mode$ = "Julia" Then
+                Input #1, xC#
+                Input #1, yC#
+            End If
+        Close #1
 
-    If color_settings = 1 Then
         Cls
         Presentation
-        Locate 14, 20: Color 15: Print "Number of cycles: "
-        Locate 15, 20: Color 15: Print "By default: 1"
-        Locate 14, 41: Color 2: Input user_input$
-        
-        cycles_nb# = VAL(user_input$)
-        If cycles_nb# <= 0 or cycles_nb# > 10000 Then
-            cycles_nb# = 1
-            cycle_length = int(precision / cycles_nb#)
-        Else
-            cycle_length = int(precision / cycles_nb#)
+        Locate 14, 20: Color 15: Print "Max iterations: "
+        Locate 15, 20: Color 14: Print "By default:"; Str$(precision_default)
+        Locate 14, 36: Color 2: Input precision
+        If precision < 2 Then
+            precision = precision_default
         End If
-    Elseif color_settings = 2 Then
-        Cls
-        Presentation
-        Locate 14, 20: Color 15: Print "Cycle length: "
-        Locate 15, 20: Color 15: Print "By default: " + RS$(precision)
-        Locate 14, 34: Color 2: Input user_input$
-        
-        cycle_length = VAL(user_input$)
-        If cycle_length <= 2 or cycle_length > 1000000 Then
-            cycle_length = precision
+
+        'Color settings selection
+        BMP_color_profile_select
+
+        If color_settings = 1 Then
+            Cls
+            Presentation
+            Locate 14, 20: Color 15: Print "Number of cycles: "
+            Locate 15, 20: Color 15: Print "By default: 1"
+            Locate 14, 41: Color 2: Input user_input$
+            
+            cycles_nb# = VAL(user_input$)
+            If cycles_nb# <= 0 or cycles_nb# > 10000 Then
+                cycles_nb# = 1
+                cycle_length = int(precision / cycles_nb#)
+            Else
+                cycle_length = int(precision / cycles_nb#)
+            End If
+        Elseif color_settings = 2 Then
+            Cls
+            Presentation
+            Locate 14, 20: Color 15: Print "Cycle length: "
+            Locate 15, 20: Color 15: Print "By default: " + RS$(precision)
+            Locate 14, 34: Color 2: Input user_input$
+            
+            cycle_length = VAL(user_input$)
+            If cycle_length <= 2 or cycle_length > 1000000 Then
+                cycle_length = precision
+            End If
+        End If
+
+        'Resolution selection
+        Resolution_select
+    Else
+        If color_settings = 1 Then
+            cycle_length = int(precision / cycles_nb#)
         End If
     End If
 
     'Load color settings
     Load_Color_Settings
-
-    'Resolution selection
-    Resolution_select
 
     'Creates "Images" folders
     Shell "md Images"
@@ -776,6 +816,9 @@ Label_BMP_Creator_Page: '___________________________________ BMP Creator
         Shell "md Images\Julia"
         mode_path$ = "Images/Julia/"
     End If
+
+    'Saves log file
+    Save_log mode_path$, 1
 
     If color_settings = 1 Then
         full_file_name$ = file_name$ + " - " + RS$(precision) + "max - cp" + RS$(color_settings) + "."+ RS$(cycles_nb#) + " - " + RS$(longueur) + "x" + RS$(hauteur) + ".bmp"
@@ -805,117 +848,124 @@ Return
 Label_Video_Mode_1: '______________________________________ Video Mode 1
     Cls
     Presentation
-    If error1 = 1 Then
-        Locate 16, 20: Color 4: Print "Need data file name to create video"
-    End If
-    Locate 14, 20: Color 15: Print "Data file name: "
-    Locate 14, 36: Color 2: Input video_name$ 'No more 8 character limit with QB64
-    If video_name$ = "" Then
-        error1 = 1
-        GoTo Label_Video_Mode_1
-    End If
 
-    'Path selection
-    If mode$ = "Mandelbrot" Then
-        'Shell "md Data\Mandelbrot"
-        mode_path$ = "Data/Mandelbrot/"
-    ElseIf mode$ = "Julia" Then
-        'Shell "md Data\Julia"
-        mode_path$ = "Data/Julia/"
-    End If
-
-    If _FILEEXISTS(mode_path$ + video_name$ + ".txt") = 0 Then
-        file_error = 1
-        Return
-    End If
-
-    'Loads data from file about target image ("pas" calculated for 200x200 image)
-    Open mode_path$ + video_name$ + ".txt" For Input As #1
-        Input #1, x_coord_end#
-        Input #1, y_coord_end#
-        Input #1, view_size_end#
-        Input #1, nbzoom
-        Input #1, precision_default
-    Close #1
-
-    CLS
-    Presentation
-    Locate 14, 20: Color 15: Print "Starting max iterations: "
-    Locate 15, 20: Color 14: Print "By default: 2"
-    Locate 14, 45: Color 2: Input precision_min
-    If precision_min < 2 or precision_min > precision_max Then
-        precision_min = 2
-    End If
-
-    CLS
-    Presentation
-    Locate 14, 20: Color 15: Print "End max iterations: "
-    Locate 15, 20: Color 14: Print "By default:"; Str$(precision_default)
-    Locate 14, 40: Color 2: Input precision_max
-    If precision_max < 2 Then
-        precision_max = precision_default
-    End If
-
-    Cls
-    Presentation
-    Locate 14, 20: Color 15: Print "Nb images: "
-    Locate 15, 20: Color 15: Print "2 < nb images < 5000"
-    Locate 14, 31: Color 2: Input ni
-    If ni < 2 Or ni > 5000 Then
-        ni = 2
-    End If
-
-    Cls
-    Presentation
-    Locate 14, 20: Color 15: Print "Start from image nb: "
-    Locate 15, 20: Color 15: Print "By default: 1"
-    Locate 14, 41: Color 2: Input first_image_nb
-    If first_image_nb < 2 Or first_image_nb > ni Then
-        first_image_nb = 1
-    End If
-
-    'Color settings selection
-    BMP_color_profile_select
-
-    If color_settings = 1 Then
-        Cls
-        Presentation
-        Locate 14, 20: Color 15: Print "Number of cycles: "
-        Locate 15, 20: Color 15: Print "By default: 1"
-        Locate 14, 41: Color 2: Input user_input$
-        
-        cycles_nb# = VAL(user_input$)
-        If cycles_nb# <= 0 or cycles_nb# > 10000 Then
-            cycles_nb# = 1
-            cycle_length = int(precision_max / cycles_nb#)
-            'cycle_length = int(precision / cycles_nb#)
-        Else
-            cycle_length = int(precision_max / cycles_nb#)
-            'cycle_length = int(precision / cycles_nb#)
+    'Parameters imput
+    If dragged_file_path$ = "" Then
+        If error1 = 1 Then
+            Locate 16, 20: Color 4: Print "Need data file name to create video"
         End If
-    Elseif color_settings = 2 Then
-        'Show_status 2, 2, "Cycle length:", 15, "By default: " + RS$(precision), 7
-        'Locate 5, 2: Color 2: Input user_input$
-        
+        Locate 14, 20: Color 15: Print "Data file name: "
+        Locate 14, 36: Color 2: Input video_name$ 'No more 8 character limit with QB64
+        If video_name$ = "" Then
+            error1 = 1
+            GoTo Label_Video_Mode_1
+        End If
+
+        'Path selection
+        If mode$ = "Mandelbrot" Then
+            'Shell "md Data\Mandelbrot"
+            mode_path$ = "Data/Mandelbrot/"
+        ElseIf mode$ = "Julia" Then
+            'Shell "md Data\Julia"
+            mode_path$ = "Data/Julia/"
+        End If
+
+        If _FILEEXISTS(mode_path$ + video_name$ + ".txt") = 0 Then
+            file_error = 1
+            Return
+        End If
+
+        'Loads data from file about target image
+        Open mode_path$ + video_name$ + ".txt" For Input As #1
+            Input #1, x_coord_end#
+            Input #1, y_coord_end#
+            Input #1, view_size_end#
+            Input #1, nbzoom
+            Input #1, precision_default
+        Close #1
+
+        CLS
+        Presentation
+        Locate 14, 20: Color 15: Print "Starting max iterations: "
+        Locate 15, 20: Color 14: Print "By default: 2"
+        Locate 14, 45: Color 2: Input precision_min
+        If precision_min < 2 or precision_min > precision_max Then
+            precision_min = 2
+        End If
+
+        CLS
+        Presentation
+        Locate 14, 20: Color 15: Print "End max iterations: "
+        Locate 15, 20: Color 14: Print "By default:"; Str$(precision_default)
+        Locate 14, 40: Color 2: Input precision_max
+        If precision_max < 2 Then
+            precision_max = precision_default
+        End If
+
         Cls
         Presentation
-        Locate 14, 20: Color 15: Print "Cycle length: "
-        Locate 15, 20: Color 15: Print "By default: " + RS$(precision_max)
-        Locate 14, 34: Color 2: Input user_input$
-        
-        cycle_length = VAL(user_input$)
-        If cycle_length <= 2 or cycle_length > 1000000 Then
-            cycle_length = precision_max
+        Locate 14, 20: Color 15: Print "Nb images: "
+        Locate 15, 20: Color 15: Print "2 < nb images < 5000"
+        Locate 14, 31: Color 2: Input ni
+        If ni < 2 Or ni > 5000 Then
+            ni = 2
+        End If
+
+        Cls
+        Presentation
+        Locate 14, 20: Color 15: Print "Start from image nb: "
+        Locate 15, 20: Color 15: Print "By default: 1"
+        Locate 14, 41: Color 2: Input first_image_nb
+        If first_image_nb < 2 Or first_image_nb > ni Then
+            first_image_nb = 1
+        End If
+
+        'Color settings selection
+        BMP_color_profile_select
+
+        If color_settings = 1 Then
+            Cls
+            Presentation
+            Locate 14, 20: Color 15: Print "Number of cycles: "
+            Locate 15, 20: Color 15: Print "By default: 1"
+            Locate 14, 41: Color 2: Input user_input$
+            
+            cycles_nb# = VAL(user_input$)
+            If cycles_nb# <= 0 or cycles_nb# > 10000 Then
+                cycles_nb# = 1
+                cycle_length = int(precision_max / cycles_nb#)
+            Else
+                cycle_length = int(precision_max / cycles_nb#)
+            End If
+        Elseif color_settings = 2 Then
+            'Show_status 2, 2, "Cycle length:", 15, "By default: " + RS$(precision), 7
+            'Locate 5, 2: Color 2: Input user_input$
+            
+            Cls
+            Presentation
+            Locate 14, 20: Color 15: Print "Cycle length: "
+            Locate 15, 20: Color 15: Print "By default: " + RS$(precision_max)
+            Locate 14, 34: Color 2: Input user_input$
+            
+            cycle_length = VAL(user_input$)
+            If cycle_length <= 2 or cycle_length > 1000000 Then
+                cycle_length = precision_max
+            End If
+        End If
+
+        'Resolution selection
+        Resolution_select
+
+        'To delete once I've managed video modes
+        video_mode = 1
+    Else
+        If color_settings = 1 Then
+            cycle_length = int(precision_max / cycles_nb#)
         End If
     End If
 
     'Load color settings
     Load_Color_Settings
-
-    'Resolution selection
-    Resolution_select
-
-    precision = precision_min
 
     'Initiate variables
     x_coord# = 0
@@ -924,9 +974,7 @@ Label_Video_Mode_1: '______________________________________ Video Mode 1
     view_size_start# = 4
     time_start = TIMER
     date_start$ = DATE$
-
-    'To delete once I've managed video modes
-    video_mode = 1
+    precision = precision_min
 
     'Creates the "Video" directory if needed - No check but seems to work...
     Shell "md Videos"
@@ -938,11 +986,13 @@ Label_Video_Mode_1: '______________________________________ Video Mode 1
         mode_path$ = "Videos/Julia/"
     End If
 
-    full_folder_path$ = mode_path$ + video_name$ + " - vm" + RS$(video_mode) + " - cp" + RS$(color_settings)
+    If color_settings = 1 Then
+        full_folder_path$ = mode_path$ + video_name$ + " - vm" + RS$(video_mode) + " - cp" + RS$(color_settings) + "." + RS$(cycles_nb#) + " - " + RS$(longueur) + "x" + RS$(hauteur)
+    Elseif color_settings = 2 Then
+        full_folder_path$ = mode_path$ + video_name$ + " - vm" + RS$(video_mode) + " - cp" + RS$(color_settings) + "." + RS$(cycle_length) + " - " + RS$(longueur) + "x" + RS$(hauteur)
+    End If
+    
     Shell "md " + chr$(34) + full_folder_path$ + chr$(34)
-
-    'Saves log file
-    Save_log full_folder_path$
 
     precision_range = precision_max - precision_min
 
@@ -961,6 +1011,9 @@ Label_Video_Mode_1: '______________________________________ Video Mode 1
     End If
 
     For f = first_image_nb To ni
+        'Saves log file
+        Save_log full_folder_path$, f
+
         'Creates file name
         num$ = Str$(f)
         num$ = Right$(num$, Len(num$) - 1)
@@ -1087,7 +1140,7 @@ Label_controls_page: '____________________________________ Controls page
     Locate menu_top_margin + 9, menu_left_margin: Color 15: Print "Press   to reset"
     Locate menu_top_margin + 9, menu_left_margin + 6: Color 2: Print "R"
 
-    Locate menu_top_margin + 10, menu_left_margin: Color 15: Print "Press   to set max parameters"
+    Locate menu_top_margin + 10, menu_left_margin: Color 15: Print "Press   to set max iterations"
     Locate menu_top_margin + 10, menu_left_margin + 6: Color 2: Print "M"
 
     Locate menu_top_margin + 11, menu_left_margin: Color 15: Print "Press   to create a BMP"
