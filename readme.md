@@ -10,9 +10,9 @@ Download from here: [Windows download](https://github.com/TonyVallad/MSZP/releas
 
 The program will create its own folders when needed. (Data, Photos...)
 
-<img src="https://pbs.twimg.com/media/FofpuY3WAAEx78s?format=png&name=small"/>
+![Software preview](https://pbs.twimg.com/media/FofpuY3WAAEx78s?format=png&name=small)
 
-<img src="https://pbs.twimg.com/media/FofrRy3XwAEDpiP?format=jpg&name=4096x4096"/>
+![Exported image example](https://pbs.twimg.com/media/FofrRy3XwAEDpiP?format=jpg&name=4096x4096)
 
 ## Changelog
 
@@ -132,6 +132,10 @@ It will contain the following parameters :
 
 ### ASAP
 
+- Make color gradient smoothing optional.
+- Add color settings and palette to image/video data file.
+- Check if the dragged file is valid.
+- Make it possible to drag data file for explorer.
 - Add missing information in data file. (log)
 - Add log-log (color gradient smoothing) to color profile 2.
 - Look into creating PNGs instead of BMPs. (size matters! xD)

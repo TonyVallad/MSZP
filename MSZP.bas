@@ -75,24 +75,26 @@ If dragged_file_path$ <> "" Then
         
         Locate 18, 11: Color 2: Print "Images created, press any key to return to the main menu"
 
-        Do
-            w$ = InKey$
-        Loop Until w$ <> ""
+        ' Do
+        '     w$ = InKey$
+        ' Loop Until w$ <> ""
     ElseIf ni = 1 Then
         GoSub Label_BMP_Creator_Page
 
         Locate 18, 11: Color 2: Print "Image created, press any key to return to the main menu"
 
-        Do
-            w$ = InKey$
-        Loop Until w$ <> ""
+        ' Do
+        '     w$ = InKey$
+        ' Loop Until w$ <> ""
     End If
+
+    dragged_file_path$ = ""
 
     Do
         w$ = InKey$
     Loop Until w$ <> ""
 
-    dragged_file_path$ = ""
+    
 End If
 
 Cls
@@ -729,7 +731,7 @@ Label_BMP_Creator_Page: '___________________________________ BMP Creator
     'Parameters imput
     If dragged_file_path$ = "" Then
         Locate 14, 20: Color 15: Print "Image Name: "
-        Locate 15, 20: Color 2: Print "This will be the name of the BMP file"
+        Locate 15, 20: Color 2: Print "Must be the same as the data file"
         Locate 14, 32: Color 2: Input file_name$
 
         'Path selection
@@ -1018,26 +1020,28 @@ Label_Video_Mode_1: '______________________________________ Video Mode 1
         num$ = Str$(f)
         num$ = Right$(num$, Len(num$) - 1)
         num$ = Right$("000000" + num$, 6)
-        imagename$ = full_folder_path$ + "/I-" + num$
+        imagename$ = full_folder_path$ + "/" + num$
         full_file_name$ = imagename$ + ".bmp"
         file_path$ = full_file_name$
 
-        'Calculates max iterations
-        a# = (f - 1) / (ni - 1)
-        a# = (exp(a#) - 1) / (exp(1) - 1)
-        precision = int(precision_min + precision_range * a#)
+        If _FILEEXISTS(file_path$) = 0 Then 'Skips image for batch rendering
+            'Calculates max iterations
+            a# = (f - 1) / (ni - 1)
+            a# = (exp(a#) - 1) / (exp(1) - 1)
+            precision = int(precision_min + precision_range * a#)
 
-        'Discards first image when necesarry, creates image otherwise
-        If f = first_image_nb and discard_first = 1 Then
-            'Nothing here
-        Else
-            BMP_Creator
+            'Discards first image when necesarry, creates image otherwise
+            If f = first_image_nb and discard_first = 1 Then
+                'Nothing here
+            Else
+                BMP_Creator
+            End If
+
+            'New parameters
+            view_size# = view_size_start# / (w# ^ f)
+            x_coord# = x_coord_end# * (1 - (1 / w# ^ f))
+            y_coord# = y_coord_end# * (1 - (1 / w# ^ f))
         End If
-
-        'New parameters
-        view_size# = view_size_start# / (w# ^ f)
-        x_coord# = x_coord_end# * (1 - (1 / w# ^ f))
-        y_coord# = y_coord_end# * (1 - (1 / w# ^ f))
     Next f
 
     'Reset variables

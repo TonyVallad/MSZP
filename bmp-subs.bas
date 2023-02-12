@@ -131,6 +131,16 @@ Sub Get_pixel_color_BMP ()
 
         position_in_cycle# = (C_int MOD cycle_length) / cycle_length + C_dec / cycle_length
 
+        'Simulate light
+        ' If C > precision - cycle_length Then
+        '     GetRGBValues nb_colors_used, position_in_cycle#
+        ' Else 
+        '     r = 0
+        '     g = 0
+        '     b = 0
+        ' End If
+
+        'Normal cyclic coloring
         GetRGBValues nb_colors_used, position_in_cycle#
 
         'Start from white/black
