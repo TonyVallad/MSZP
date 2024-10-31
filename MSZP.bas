@@ -53,6 +53,26 @@ DIM Image_array (explorer_width, explorer_height)
 DIM palette_pos# (15) 'Position in cycle (from 0 to 1)
 DIM palette_color (15, 3) '15 colors max for the moment - RGB values
 
+'Declaring variables
+DIM SHARED x_coord AS _FLOAT
+DIM SHARED y_coord AS _FLOAT
+DIM x_coord_end AS _FLOAT
+DIM y_coord_end AS _FLOAT
+DIM x_moov AS _FLOAT
+DIM y_moov AS _FLOAT
+DIM SHARED view_size AS _FLOAT
+DIM view_size_start AS _FLOAT
+DIM view_size_end AS _FLOAT
+DIM SHARED xC AS _FLOAT
+DIM SHARED yC AS _FLOAT
+DIM C_step AS _FLOAT
+DIM w AS _FLOAT 'Zoom coeficcient in video mode
+DIM a AS _FLOAT 'Helps calculate max iterations in video mode
+'Avoid using the following to make them obsolete as soon as possible:
+DIM SHARED debutx AS _FLOAT
+DIM SHARED debuty AS _FLOAT
+DIM SHARED pas AS _FLOAT
+
 Main_menu: '__________________________________________________ Main menu
 
 'Reset all variables
