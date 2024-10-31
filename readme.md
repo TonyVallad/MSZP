@@ -1,5 +1,5 @@
 
-# Mandelbrot Set Zoomer Program - Version 0.5.0 - Alpha
+# Mandelbrot Set Zoomer Program - V 0.5.0 - Alpha
 
 ## Installation
 
@@ -9,6 +9,10 @@ Download from here: [Windows download](https://github.com/TonyVallad/MSZP/releas
 2. Run MSZP.exe
 
 The program will create its own folders when needed. (Data, Photos...)
+
+<img src="https://pbs.twimg.com/media/FofpuY3WAAEx78s?format=png&name=small" width="850"/>
+
+<img src="https://pbs.twimg.com/media/FofrRy3XwAEDpiP?format=jpg&name=4096x4096" width="850"/>
 
 ## Changelog
 
@@ -32,6 +36,7 @@ The program will create its own folders when needed. (Data, Photos...)
 - Added a controls page.
 - Added option to change C coordinates step on Julia explorer. (Page up/down)
 - Added an error message if file is not found.
+- Updated image filename to have cycles number or length depending on color profile.
 
 ### From V 0.1.0 to V 0.4.0:
 - Added program icon and text in title bar.
@@ -122,6 +127,7 @@ It will contain the following parameters :
 
 ### ASAP
 
+- Add log-log to color profile 2.
 - Look into creating PNGs instead of BMPs. (size matters! xD)
 - Make it possible to drag and drop a data file onto the .exe to auto-start BMP creation.
 - Fix default parameters display when creating a BMPs from explorer.
