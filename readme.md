@@ -153,3 +153,11 @@ I want to see it finished.
 If my AMD Ryzen 9 5900X was sentient, it probably would be frustrated as f*** ! xD
 
 Now that this is said... have fun !
+
+---
+
+### **License**
+
+This project is licensed under the MIT License. You are free to use, modify, and distribute this software in any project, personal or commercial, provided that you include a copy of the original license and copyright notice.
+
+For more information, see the [LICENSE](LICENSE) file.
